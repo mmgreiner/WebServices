@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!-- http://www.w3schools.com/jquerymobile/jquerymobile_examples.asp -->
+    <title>Test F...ing events</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#h1").text = "text";
+            $("#h1").html = "html";
+            $("#h1").val = "val";
+            $("#h1").html("hallo");
+//            document.getElementById("h1").innerHTML = "good morning";
+            
+            var alreadyinit = true;
+            //alert("initializing");
+//            $("#selector").mouseenter(function () { E("s enter") });
+//            $("#selector").mouseleave(function () { E("s leave") });
+            $("#selector").on({
+                mouseenter: function () { $("#h1").html("mouseenter") },
+                mouseleave: function () { $("#h1").html("mouseleave") }
+            });
+            $("#page0").show();
+            $("#page1").hide();
+
+            $("#userform").submit(function () {
+                alert("email = " + $("#email").val() + "\nphone = " + $("#phone").val());
+                // call web service
+                $("#page0").hide();
+                $("#page1").show();
+
+            });
+        });
+
+        function E(m) {
+            $("#h1").text = m;
+        }
+
+    </script>
+
+</head>
+<body>
+    <div id="page0" data-role="page">
+        <div data-role="header">
+            <h1>This is the Page0</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            This is main
+            <form method="post" action="demoform.asp" id="userform">
+                    <label for="fullname">Full name:</label>
+                    <input type="text" id="fullname">
+
+                    <label for="phone">Phone number:</label>
+                    <input type="tel" id="phone" placeholder="Your phone number..." required pattern="\+[0-9 ]+">
+
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" placeholder="Your email.." required>
+
+                <input type="submit" data-inline="true" id="register" value="Register user" />
+            </form>
+        </div>
+        <div data-role="footer">
+            <h2>footer 0</h2>
+        </div>
+    </div>
+
+    <div id="page1" data-role="page">
+        <div data-role="header">
+            <h1>Page 1</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <select id="selector">
+                <!--
+            onchange="E('change')"
+            onselect="E('select')"
+            onclick="E('click')"
+            onfocus="E('focus')"
+            onmouseover="E('mouseover'); "
+            onmouseenter="E('mouseenter'); AddEntries(this);"
+            onmouseleave="E('mouseleave')"
+                -->
+
+                <option>Select a value...</option>
+                <option id="opt1">Option1</option>
+                <option id="opt2">Option2</option>
+            </select>
+            <h1 id="h1">Debugging info</h1>
+            <p></p>
+        </div>
+        <div data-role="footer">
+            <h2>Footer 1</h2>
+        </div>
+    </div>
+</body>
+
+<!--
+<script>
+
+    function AddEntries(elem)
+    {
+        elem.options[elem.options.length] = new Option("text1", "value1");
+        elem.options[elem.options.length] = new Option("text2", "value2");
+    }
+</script>
+    -->
+</html>
