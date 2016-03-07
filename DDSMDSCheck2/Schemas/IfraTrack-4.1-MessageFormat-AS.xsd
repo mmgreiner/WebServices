@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.ifra.com/IfraTrack/imf/4.1" xmlns:isx="http://www.ifra.com/schema-extensions/1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:imf="http://www.ifra.com/IfraTrack/imf/4.1" xmlns:isd="http://www.ifra.com/IfraTrack/isd/4.1" xmlns="http://www.ifra.com/IfraTrack/imf/4.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="4.1.0" id="IfraTrack-4.1.0-MessageFormat-AS-7" isx:status="ApprovedSpecification" isx:internalVersion="7">
+	<xs:annotation>
+		<xs:appinfo>
+			<dc:creator>IFRA</dc:creator>
+			<dc:date>2008-12-01</dc:date>
+			<dc:rights>Copyright &#169; 2008 IFRA All rights reserved.</dc:rights>
+		</xs:appinfo>
+		<xs:documentation>IFRA Track Message Format (imf) Schema</xs:documentation>
+		<xs:documentation>Version: 4.1</xs:documentation>
+	</xs:annotation>
+	<!-- ================  Schema imports  ====================== -->
+	<xs:import namespace="http://www.ifra.com/IfraTrack/isd/4.1" schemaLocation="IfraTrack-4.1-SharedDefinitions-AS.xsd"/>
+	<!-- -->
+	<!-- ================  top level object  ====================== -->
+	<xs:element name="Imf" type="ImfType"/>
+	<!-- -->
+	<!-- ====================  Imf Type  ====================== -->
+	<xs:complexType name="ImfType">
+		<xs:sequence>
+			<xs:element name="Head" type="HeadType"/>
+			<xs:element name="Body" type="BodyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<!-- ===================  HeadType  ====================== -->
+	<xs:complexType name="HeadType">
+		<xs:sequence>
+			<xs:element name="IfraTrackVersion" type="VersionType"/>
+			<xs:element name="Interface" type="InterfaceDescriptionType"/>
+			<xs:element name="Source" type="isd:SourceType"/>
+			<xs:element name="Time" type="xs:dateTime"/>
+			<xs:element name="MessageID" type="xs:string" minOccurs="0"/>
+			<xs:element name="Meta" type="MetaType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<xs:complexType name="InterfaceDescriptionType">
+		<xs:sequence>
+			<xs:element name="ID" type="xs:string"/>
+			<xs:element name="Name" type="xs:string"/>
+			<xs:element name="Version" type="xs:string"/>
+			<xs:element name="Supplier" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<xs:complexType name="MetaType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:string"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="VersionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="4.1.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- -->
+	<!-- ===================  BodyType  ====================== -->
+	<xs:complexType name="BodyType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="isd:Object" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="MessageReply" type="MessageReplyType" minOccurs="0"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<!-- ================  MessageReply Type  ================== -->
+	<xs:complexType name="MessageReplyType">
+		<xs:sequence>
+			<xs:element name="MessageID" type="xs:string"/>
+			<xs:element name="Type" type="xs:string"/>
+			<xs:element name="Number" type="xs:string" minOccurs="0"/>
+			<xs:element name="ReplyText" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ================================================== -->
+	<!-- -->
+</xs:schema>

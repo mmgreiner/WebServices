@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.ifra.com/imf/3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:imf="http://www.ifra.com/imf/3.0" xmlns="http://www.w3.org/2001/XMLSchema">
+	<!-- ****** This part of the schema describes the objects, attributes and links in the model ****** -->
+	<!-- ****** The first part of the schema describes the tags used for the messaging format   ****** -->
+	<!-- ****** It is this part that should be refered to in instance documents                  ****** -->
+	<include schemaLocation="imf-base.xsd"/>
+	<!-- ************************* object classes ****************************** -->
+	<element name="Issue" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Edition" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="EditionVersion" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Product" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Page" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Element" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Position" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="FormeDescription" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="FormeBitmap" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Film" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Plate" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="PrintingJob" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Reel" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Van" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Route" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Drop" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Bundle" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<element name="Department" type="imf:AbstractObjectType" substitutionGroup="imf:abstract_object"/>
+	<!-- **************************** end object classes ********************** -->
+	<!-- ************************** Types for attributes ********************** -->
+	<simpleType name="SimpleShapeType">
+		<list itemType="integer"/>
+	</simpleType>
+	<simpleType name="SimplePlateSizeType">
+		<restriction base="string">
+			<enumeration value="single"/>
+			<enumeration value="double"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="SimplePaperType">
+		<restriction base="string">
+			<enumeration value="standard"/>
+			<enumeration value="special"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="SimpleReelWidthType">
+		<restriction base="string">
+			<enumeration value="1/4"/>
+			<enumeration value="1/2"/>
+			<enumeration value="3/4"/>
+			<enumeration value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="SimpleProductionType">
+		<restriction base="string">
+			<enumeration value="main_run"/>
+			<enumeration value="pre_run"/>
+			<enumeration value="external"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="SimplePageFormatType">
+		<restriction base="string">
+			<enumeration value="tabloid"/>
+			<enumeration value="broadsheet"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="SimpleColourType">
+		<restriction base="string">
+			<enumeration value="c"/>
+			<enumeration value="m"/>
+			<enumeration value="y"/>
+			<enumeration value="k"/>
+			<enumeration value="spot"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="SimpleColoursType">
+		<list itemType="imf:SimpleColourType"/>
+	</simpleType>
+	<simpleType name="SimpleElementType">
+		<restriction base="string">
+			<enumeration value="text"/>
+			<enumeration value="image"/>
+			<enumeration value="graphic"/>
+			<enumeration value="reservation"/>
+			<enumeration value="composed"/>
+			<enumeration value="complete_page"/>
+			<enumeration value="spread"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="SimpleContentType">
+		<restriction base="string">
+			<enumeration value="editorial"/>
+			<enumeration value="advertising"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="SimpleOPIStatusType">
+		<restriction base="string">
+			<enumeration value="available"/>
+			<enumeration value="not_available"/>
+		</restriction>
+	</simpleType>
+	<!-- images, an image is now a special case of an attribute -->
+	<complexType name="ImageType">
+		<simpleContent>
+			<extension base="base64Binary">
+				<attribute name="height" type="integer"/>
+				<attribute name="width" type="integer"/>
+				<attribute name="uri" type="anyURI"/>
+				<attribute name="mimeType" type="string"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<!-- end images -->
+	<!-- *************************** end types for attributes **************************** -->
+	<!-- ****************************** links ********************************** -->
+	<!--  Drop -> Bundle (1:N) and EditionVersion -> Bundle (1:N) -->
+	<element name="BundlesLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Bundle -> Bundle (N:1) -->
+	<element name="ContainerBundleLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Position -> Element (N:1) -->
+	<element name="ContainerElementLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Element -> Element (N:N) -->
+	<element name="ContainerElementsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Position -> Page (N:1) -->
+	<element name="ContainerPageLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Product -> Department (N:N) and Element -> Department (N:N) -->
+	<element name="DepartmentsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Bundle -> Drop (N:1) -->
+	<element name="DropLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Route -> Drop (1:N) -->
+	<element name="DropsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- EditionVersion -> Edition (N:1) -->
+	<element name="EditionLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Bundle -> EditionVersion (N:1) -->
+	<element name="EditionVersionLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Edition ->EditionVersion (1:N) -->
+	<!-- Product -> EditionVersion (N:N) -->
+	<!-- Route ->EditionVersion (N:N) -->
+	<element name="EditionVersionsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Issue -> Edition (1:N) -->
+	<element name="EditionsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Issue -> Element (N:N)            -->
+	<!-- Page -> Element (N:N)             -->
+	<!-- FormeDescription -> Element (N:N) -->
+	<!-- Department -> Element (N:N)       -->
+	<element name="ElementsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Plate -> Film (N:N)       -->
+	<!-- FormeBitmap -> Film (N:N) -->
+	<element name="FilmsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Plate -> FormeBitmap (N:1) -->
+	<element name="FormeBitmapLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Film -> FormeBitmap (N:N)             -->
+	<!-- FormeDescription -> FormeBitmap (1:N) -->
+	<element name="FormeBitmapsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- FormeBitmap -> FormeDescription (N:1) -->
+	<element name="FormeDescriptionLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Page -> FormeDescription (N:N)   -->
+	<!-- Element ->FormeDescription (N:N) -->
+	<element name="FormeDescriptionsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Edition -> Issue (N:1) -->
+	<element name="IssueLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Element -> Issue (N:N) -->
+	<element name="IssuesLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Position -> Page (N:1) -->
+	<element name="PageLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Product -> Page (N:N)          -->
+	<!-- Element  -> Page (N:N)         -->
+	<!-- FormeDescription -> Page (N:N) -->
+	<element name="PagesLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- FormeBitmap -> Plate (1:N) -->
+	<!-- PrintingJob -> Plate (N:N) -->
+	<!-- Film ->Plate (N:N)         -->
+	<element name="PlatesLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Element -> Position (N:N) -->
+	<element name="PositionsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Product -> PrintingJob (1:N) -->
+	<!-- Plate -> PrintingJob (N:N)   -->
+	<!-- Reel -> PrintingJob (N:N)    -->
+	<element name="PrintingJobsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- PrintingJob -> Product (N:1) -->
+	<element name="ProductLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- EditionVersion ->Product (N:N) -->
+	<!-- Page -> Product (N:N)          -->
+	<!-- Department  -> Product (N:N)   -->
+	<element name="ProductsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- PrintingJob -> Reel (N:N) -->
+	<element name="ReelsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Drop -> Route (N:1) -->
+	<element name="RouteLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- EditionVersion -> Route (N:N) -->
+	<!-- Van -> Route (1:N)            -->
+	<element name="RoutesLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Bundle -> Bundle (1:N) -->
+	<element name="SubBundlesLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Position -> Element (1:N) -->
+	<element name="SubElementLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Page -> Position (1:N)    -->
+	<!-- Element -> Position (N:N) -->
+	<element name="SubElementPositionsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Element -> Element (N:N) -->
+	<element name="SubElementsLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- Route -> Van (N:1) -->
+	<element name="VanLink" type="imf:AbstractLinkType" substitutionGroup="imf:abstract_link"/>
+	<!-- *********************** end links **************************** -->
+	<!-- *********************** Activities *************************** -->
+	<!-- "Production" is the default activity.  -->
+	<element name="Production" type="imf:AbstractActivityType" substitutionGroup="imf:abstract_activity"/>
+	<!-- ********************* End activities ************************* -->
+</schema>

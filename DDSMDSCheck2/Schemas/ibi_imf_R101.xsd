@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio - Developer Edition 7.1.4.1284 (http://www.liquid-technologies.com)-->
+<!-- Copyright ABB Schweiz AG, 2010. All rights reserved. -->
+<xs:schema xmlns:imf="http://www.ifra.com/IfraTrack/imf/4.1" xmlns:icv="http://www.ifra.com/IfraTrack/icv/4.1" 
+           xmlns:spine="http://www.abb.com/printing" xmlns:isd="http://www.ifra.com/IfraTrack/isd/4.1" 
+           xmlns:ibi="http://www.abb.com/printing/insertBookingInterface" attributeFormDefault="unqualified" 
+           elementFormDefault="qualified" 
+           targetNamespace="http://www.abb.com/printing/insertBookingInterface" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- ================ imported schemas =================== -->
+  <xs:import schemaLocation="IfraTrack-4.1-MessageFormat-AS.xsd" namespace="http://www.ifra.com/IfraTrack/imf/4.1" />
+  <xs:import schemaLocation="IfraTrack-4.1-SharedDefinitions-AS.xsd" namespace="http://www.ifra.com/IfraTrack/isd/4.1" />
+  <!-- ********************************************************************************* -->
+  <!-- ABB-IBI Definition -->
+  <!-- Revision History: -->
+  <!--2010-09-13/gr Based on Tech. Spec R101 Rev. F -->
+  <!-- ********************************************************************************* -->
+  <!-- *********** SIMPLE TYPES **************************************************** -->
+  <!-- Predefinition of NameType -->
+  <xs:simpleType name="NameType">
+    <xs:annotation>
+      <xs:documentation>General Type for any kind of names. String must not
+				be empty</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="50" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of ShortNameType -->
+  <xs:simpleType name="ShortNameType">
+    <xs:annotation>
+      <xs:documentation>General Type for any kind of short names. String must not
+				be empty</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="12" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of CodeType -->
+  <xs:simpleType name="CodeType">
+    <xs:annotation>
+      <xs:documentation>General Type for any kind of Codes. Must be at
+				least three characters long</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="3" />
+      <xs:maxLength value="50" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of TargetGroupCodeType -->
+  <xs:simpleType name="TargetGroupCodeType">
+    <xs:annotation>
+      <xs:documentation>An enumeration of the supported target group codes.
+			</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Subscriber">
+        <xs:annotation>
+          <xs:documentation>German: Abonnent</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Postal">
+        <xs:annotation>
+          <xs:documentation>German: Postversand</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Wholesale">
+        <xs:annotation>
+          <xs:documentation>German: </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="NonSubscriber" />
+      <xs:enumeration value="Other" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="FoldType">
+    <xs:annotation>
+      <xs:documentation>An enumeration of the supported fold types. Should
+				correspond to those in Prime Postpress.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NOFOLD" />
+      <xs:enumeration value="ONEFOLD" />
+      <xs:enumeration value="TWOFOLD" />
+      <xs:enumeration value="THREEFOLD" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- *********** COMPLEX TYPES derived from AbstractObject ***************** -->
+  <xs:complexType name="InsertBookingType">
+    <xs:annotation>
+      <xs:documentation>represents the booking of sales zones (rsp. locationGroupCodes) for this inserts.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="LocationGroupCode" type="ibi:CodeType">
+        <xs:annotation>
+          <xs:documentation>Code of the sales zone. Must correspond to the
+								LocationGroupCode of the ABB-DDS file.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="TargetGroupCode" type="ibi:TargetGroupCodeType">
+        <xs:annotation>
+          <xs:documentation>Identifies the subscribers to reach.
+							</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ProductionOrderShortName" type="ibi:ShortNameType">
+        <xs:annotation>
+          <xs:documentation>Name of the Publication. Must correspond to the
+								ProductionOrderShortName in the ABB-DDS file.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="EditionShortName" type="ibi:NameType">
+        <xs:annotation>
+          <xs:documentation>Name of the booked edition within the booked
+								location group. Must correspond to EditionShortName in ABB-DDS
+								file.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="PublicationDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>The booking date equals the publication date of
+								the edition.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InsertOrderType">
+    <xs:annotation>
+      <xs:documentation>Contains the insert and booking information. It is
+				derived from isd:AbstractObject</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="isd:AbstractObject">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="InsertName" type="ibi:NameType">
+            <xs:annotation>
+              <xs:documentation>Name of the insert</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Account" type="ibi:NameType">
+            <xs:annotation>
+              <xs:documentation>Account this insert belongs to</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomerID" type="isd:ObjectUIDType">
+            <xs:annotation>
+              <xs:documentation>Related insert customer</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="Height">
+            <xs:annotation>
+              <xs:documentation>Height in [mm]</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:nonNegativeInteger">
+                <xs:minInclusive value="1" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="Width">
+            <xs:annotation>
+              <xs:documentation>Width in [mm]</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:nonNegativeInteger">
+                <xs:minInclusive value="1" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="1" maxOccurs="1" name="Weight" type="xs:nonNegativeInteger" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Thickness">
+            <xs:annotation>
+              <xs:documentation>Thickness of the product in [1/10 mm]
+							</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:nonNegativeInteger">
+                <xs:minInclusive value="1" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="Pages">
+            <xs:simpleType>
+              <xs:annotation>
+                <xs:documentation>Number of Pages. Must be even number
+								</xs:documentation>
+              </xs:annotation>
+              <xs:restriction base="xs:nonNegativeInteger">
+                <xs:minInclusive value="2" />
+                <xs:pattern value=".*[02468]" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="Surface" type="ibi:NameType" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Fold" type="ibi:FoldType" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TargetQuantity">
+            <xs:annotation>
+              <xs:documentation>Target quantity of the insert
+							</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:nonNegativeInteger">
+                <xs:minInclusive value="1" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="InsertBooking" type="ibi:InsertBookingType">
+            <xs:annotation>
+              <xs:documentation>Bookings of this inserts</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

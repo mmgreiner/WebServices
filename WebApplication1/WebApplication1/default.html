@@ -8,59 +8,250 @@
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
+
     <script>
         $(document).ready(function () {
-            $("#h1").text = "text";
-            $("#h1").html = "html";
-            $("#h1").val = "val";
             $("#h1").html("hallo");
-//            document.getElementById("h1").innerHTML = "good morning";
-            
-            var alreadyinit = true;
-            //alert("initializing");
-//            $("#selector").mouseenter(function () { E("s enter") });
-//            $("#selector").mouseleave(function () { E("s leave") });
-            $("#selector").on({
-                mouseenter: function () { $("#h1").html("mouseenter") },
-                mouseleave: function () { $("#h1").html("mouseleave") }
+
+            site = GetStorage();
+
+            $("#userform").submit(SubmitRegistration);
+
+            $("#clearStorage").click(function () {
+                localStorage.removeItem("ABB.email");
+                localStorage.removeItem("ABB.site");
+                localStorage.clear();       // this doesnt work?
             });
-            $("#page0").show();
-            $("#page1").hide();
 
-            $("#userform").submit(function () {
-                alert("email = " + $("#email").val() + "\nphone = " + $("#phone").val());
-                // call web service
-                $("#page0").hide();
-                $("#page1").show();
+            // selector ...
 
+            // if there are default values, no need to show login pge
+            if (site)
+                $.mobile.changePage("#mainPage");
+
+
+            //$("#page0").show();
+            //$("#page1").hide();
+
+        });
+
+        //        $("#selector").ready(function ()
+        //        { }
+
+        $("#selector").ready(function () {
+            console.log("entered selector->ready")
+            $("#selector").on({
+                mouseenter: function () {
+                    // only do it the first time
+                    if ($(this).children('option').length > 1)
+                        return;
+
+                    var site = GetSite();
+
+                    for (var i = 0; i < site.systems.length; i++) {
+                        var name = site.systems[i].Name;
+                        $(this).append($("<option/>", {
+                            value: name,
+                            text: name
+                        }));
+                    };
+                },
+                mouseleave: function () { $("#h1").html("mouseleave") },
+
+                click: function () {
+                    console.log("selected " + $(this).val() + $(this).prop('selectedIndex'));
+                    // if is the first option, continue, since this is the select label
+                    if ($(this).prop('selectedIndex') == 0)
+                        return;
+
+                    // set the error messages
+                    site = GetSite();
+
+                    // get error messages
+                    var i;
+                    for (i = 0; i < site.systems.length; i++) {
+                        console.log("i=" + site.systems[i].Name);
+                        if (site.systems[i].Name == $(this).val()) break;
+                    }
+                    // now i has the name
+                    console.log("sel = " + $(this).val() + " " + site.systems[i].Name);
+
+                    // clear errorMessage
+                    $("#errorMessage").empty();
+                    $("#errorMessage").append($("<option/>", { text: "Select a message..." }))
+                    var messages = site.systems[i].FrequentErrors;
+                    for (var j = 0; j < messages.length; j++)
+                        $("#errorMessage").append($("<option/>", { value: messages[j], text: messages[j] }));
+                    $("#errorMessage").selectmenu("refresh", true);
+                }
             });
         });
 
+
+        //function AddOptions(site)
+        //{
+        //    if (!site)
+        //        return;
+
+        //    for (var i = 0; i < site.systems.length; i++)
+        //    {
+        //        var name = site.systems[i].Name;
+        //        $(this).append($("<option/>", {
+        //            value: name,
+        //            text: name
+        //        }));
+        //    }
+        //}
+
+
+        function GetSite() {
+            var s = $("#site").val();
+            return JSON.parse(s);
+        }
+
+        function SetSite(site) {
+            if ($.type(site) === "string")
+                $("#site").val(site);
+            else
+                $("#site").val(JSON.stringify(site));
+        }
+
+        function GetStorage() {
+            var email = localStorage.getItem("ABB.email");
+            if (email)
+                $("#email").val(email);
+            var siteStr = localStorage.getItem("ABB.site");
+
+            // save on a hidden field
+            SetSite(siteStr);
+
+            var site = JSON.parse(siteStr);
+            return site;
+        }
+
+        function SetStorage(email, site) {
+            localStorage.setItem("ABB.email", email);
+            var s = JSON.stringify(site);
+            localStorage.setItem("ABB.site", s);
+            SetSite(s);
+        }
+
+
+        function SubmitRegistration() {
+            var email = $('#email').val();
+            alert("email = " + $("#email").val() + "\nphone = " + $("#phone").val());
+            SoapGetSiteInfo(email);
+            return false;       // important, otherwise is jumps pages
+        }
         function E(m) {
             $("#h1").text = m;
         }
 
+        function SOAP(parname, parval) {
+            var soap = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
+                'xmlns:tem="http://tempuri.org/"> <soapenv:Header/><soapenv:Body> ' +
+                '<tem:GetSiteInfoJSON><tem:' + parname + '>' + parval + '</tem:email></tem:GetSiteInfoJSON> ' +
+                '</soapenv:Body></soapenv:Envelope>';
+            return soap;
+        }
+
+        var WebServiceURL = "http://abbprintingservices.azurewebsites.net/ActricityWebServices.svc";
+        function SoapGetSiteInfoAJAX(email) {
+            // doesn't work in iexplorer
+            var data = SOAP("email", email);
+            console.log(WebServiceURL);
+            console.log(data);
+            $.ajax({
+                url: WebServiceURL,
+                type: "POST",
+                dataType: "xml",
+                data: data,
+                contentType: "text/xml; charset=\"utf-8\"",
+                processData: false,
+                crossDomain: true,
+                success: SoapSuccess,
+                error: SoapError,
+            });
+        }
+
+        function IsGoodUser(email, site) {
+            // site should not be null
+            if (site) {
+                SetStorage(email, site);
+                // move to next page
+                $.mobile.changePage("#mainPage");
+            }
+            else
+                alert("User is not registered.");
+        }
+
+        function SoapGetSiteInfo(email) {
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.open("POST", "http://abbprintingservices.azurewebsites.net/ActricityWebServices.svc", true);
+            httpRequest.setRequestHeader("Content-Type", "text/xml;charset=UTF-8");
+            httpRequest.setRequestHeader("SOAPAction", "http://tempuri.org/IActricityService/GetSiteInfoJSON");
+
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                    console.log("success " + httpRequest.responseText + "\n" + httpRequest.responseXML);
+                    // now parse this
+                    var response = httpRequest.responseText;
+                    var xmldoc = jQuery.parseXML(response);
+                    var xml = $(xmldoc);
+                    var result = xml.find("*").first().text();
+                    // now turn it into an object
+                    var site = jQuery.parseJSON(result);
+                    IsGoodUser(email, site);
+                }
+                else
+                    console.log("error " + httpRequest.status);
+                return true;
+            };
+            httpRequest.send(SOAP("email", email));
+        }
+
+        function SoapSuccess(data, status) {
+            console.log("Soap returned " + data.responseText, data.responseXML);
+            alert(data.responseText);
+        }
+
+        function SoapError(data, status, request) {
+            var res = data.d;
+            alert('error status = ' + status + ' request = ' + request + ' res = ' + data.d);
+        }
+
     </script>
+
 
 </head>
 <body>
-    <div id="page0" data-role="page">
+
+    <div id="logonPage" data-role="page">
         <div data-role="header">
             <h1>This is the Page0</h1>
         </div>
         <div data-role="main" class="ui-content">
-            This is main
-            <form method="post" action="demoform.asp" id="userform">
-                    <label for="fullname">Full name:</label>
-                    <input type="text" id="fullname">
+            This is main action="demoform.asp" method="get" action=""
+            <form id="userform" class="ui-body ui-body-a ui-corner-all">
+                <fieldset>
+                    <div class="fieldcontain">
 
-                    <label for="phone">Phone number:</label>
-                    <input type="tel" id="phone" placeholder="Your phone number..." required pattern="\+[0-9 ]+">
+                        <label for="phone">Phone number:</label>
+                        <input type="tel" id="phone" value="+2 12" placeholder="Your phone number..." required pattern="\+[0-9 ]+">
 
-                    <label for="email">E-mail:</label>
-                    <input type="email" id="email" placeholder="Your email.." required>
+                        <label for="email">E-mail:</label>
+                        <input type="email" id="email" placeholder="Your email.." required>
 
-                <input type="submit" data-inline="true" id="register" value="Register user" />
+                        <h3 id="site">site info</h3>
+
+                        <p><a href="#mainPage" data-role="button">Main page</a></p>
+
+                        <input type="button" id="clearStorage" value="Clear Storage" />
+
+                        <input type="submit" id="register" value="Continue..." />
+
+                    </div>
+                </fieldset>
             </form>
         </div>
         <div data-role="footer">
@@ -68,43 +259,34 @@
         </div>
     </div>
 
-    <div id="page1" data-role="page">
+
+    <div id="mainPage" data-role="page">
         <div data-role="header">
             <h1>Page 1</h1>
         </div>
         <div data-role="main" class="ui-content">
             <select id="selector">
-                <!--
-            onchange="E('change')"
-            onselect="E('select')"
-            onclick="E('click')"
-            onfocus="E('focus')"
-            onmouseover="E('mouseover'); "
-            onmouseenter="E('mouseenter'); AddEntries(this);"
-            onmouseleave="E('mouseleave')"
-                -->
-
-                <option>Select a value...</option>
-                <option id="opt1">Option1</option>
-                <option id="opt2">Option2</option>
+                <option>Select the system...</option>
             </select>
+
+            <select id="errorMessage">
+                <option>Select a message...</option>
+            </select>
+
             <h1 id="h1">Debugging info</h1>
             <p></p>
+            <form method="get" action="" class="ui-body ui-body-a ui-corner-all">
+                <input type="text" name="hallo" placeholder="Some input" />
+            </form>
+            <input type="submit" value="Press to test" />
+
+            <p><a href="#logonPage" data-role="button">back to logoin</a></p>
         </div>
         <div data-role="footer">
             <h2>Footer 1</h2>
         </div>
     </div>
+
 </body>
 
-<!--
-<script>
-
-    function AddEntries(elem)
-    {
-        elem.options[elem.options.length] = new Option("text1", "value1");
-        elem.options[elem.options.length] = new Option("text2", "value2");
-    }
-</script>
-    -->
 </html>

@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDSMDSCheck2", "DDSMDSCheck2\DDSMDSCheck2.csproj", "{188FBD28-176B-4D56-A267-87D10DD726AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testdata", "Testdata", "{52458A8C-44CB-4B36-AD21-7266A5F94F47}"
+	ProjectSection(SolutionItems) = preProject
+		Testdata\VRM_ADS_20100730.xml = Testdata\VRM_ADS_20100730.xml
+		Testdata\VRM_DDS_ZEITUNG_20100730.xml = Testdata\VRM_DDS_ZEITUNG_20100730.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ACDA6946-BD03-407E-AE5B-90BC50E84153}"
+	ProjectSection(SolutionItems) = preProject
+		Testdata\VRM_ADS_20100730.xml = Testdata\VRM_ADS_20100730.xml
+		Testdata\VRM_DDS_ZEITUNG_20100730.xml = Testdata\VRM_DDS_ZEITUNG_20100730.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{EBB50F88-614D-4672-8510-BE95454381D2}"
+	ProjectSection(SolutionItems) = preProject
+		Schemas\Ads_imf_ex.xsd = Schemas\Ads_imf_ex.xsd
+		Schemas\Ads_imf_R102.xsd = Schemas\Ads_imf_R102.xsd
+		Schemas\dds_imf_R201.xsd = Schemas\dds_imf_R201.xsd
+		Schemas\ibi_imf_R101.xsd = Schemas\ibi_imf_R101.xsd
+		Schemas\IfraTrack-4.1-ControlledVocabularies-AS.xsd = Schemas\IfraTrack-4.1-ControlledVocabularies-AS.xsd
+		Schemas\IfraTrack-4.1-MessageFormat-AS.xsd = Schemas\IfraTrack-4.1-MessageFormat-AS.xsd
+		Schemas\IfraTrack-4.1-SharedDefinitions-AS.xsd = Schemas\IfraTrack-4.1-SharedDefinitions-AS.xsd
+		Schemas\imf-base.xsd = Schemas\imf-base.xsd
+		Schemas\imf.xsd = Schemas\imf.xsd
+		Schemas\ios_imf_R101.xsd = Schemas\ios_imf_R101.xsd
+		Schemas\mds_R102.xsd = Schemas\mds_R102.xsd
+		Schemas\NewXMLSchema.xsd = Schemas\NewXMLSchema.xsd
+		Schemas\synch_imf_ex.xsd = Schemas\synch_imf_ex.xsd
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDSMDSCheckTest", "DDSMDSCheckTest\DDSMDSCheckTest.csproj", "{FBAE92D5-190E-4349-8C0F-E2B039278054}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{188FBD28-176B-4D56-A267-87D10DD726AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{188FBD28-176B-4D56-A267-87D10DD726AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{188FBD28-176B-4D56-A267-87D10DD726AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{188FBD28-176B-4D56-A267-87D10DD726AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBAE92D5-190E-4349-8C0F-E2B039278054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBAE92D5-190E-4349-8C0F-E2B039278054}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBAE92D5-190E-4349-8C0F-E2B039278054}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBAE92D5-190E-4349-8C0F-E2B039278054}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

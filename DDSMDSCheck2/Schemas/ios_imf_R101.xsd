@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright ABB Schweiz AG, 2010. All rights reserved. -->
+<xs:schema xmlns:imf="http://www.ifra.com/IfraTrack/imf/4.1"
+	xmlns:icv="http://www.ifra.com/IfraTrack/icv/4.1" xmlns:spine="http://www.abb.com/printing"
+	xmlns:isd="http://www.ifra.com/IfraTrack/isd/4.1" xmlns:ios="http://www.abb.com/printing/insertOrderSynchronization"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified"
+	elementFormDefault="qualified"
+	targetNamespace="http://www.abb.com/printing/insertOrderSynchronization"
+	version="1.0.1">
+
+	<!-- ================ imported schemas =================== -->
+	<xs:import schemaLocation="IfraTrack-4.1-MessageFormat-AS.xsd"
+		namespace="http://www.ifra.com/IfraTrack/imf/4.1" />
+	<xs:import schemaLocation="IfraTrack-4.1-SharedDefinitions-AS.xsd"
+		namespace="http://www.ifra.com/IfraTrack/isd/4.1" />
+	<xs:import schemaLocation="ibi_imf_R101.xsd" namespace="http://www.abb.com/printing" />
+	<xs:import schemaLocation="ads_imf_R102.xsd" namespace="http://www.abb.com/printing" />
+	<!-- ********************************************************************************* -->
+	<!-- ABB-IOS Definition -->
+	<!-- Revision History: -->
+	<!--2010-10-21/gr Based on Tech. Spec R101 Rev. F -->
+	<!-- ********************************************************************************* -->
+	<!-- *********** SIMPLE TYPES **************************************************** -->
+
+	<!-- ************ definitions of the types used **************** -->
+	<xs:complexType name="InsertOderType">
+		<xs:annotation>
+			<xs:documentation>Insert Type extends IBI InsertType
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="ibi:InsertType">
+				<xs:sequence>
+					<xs:element name="displayedOrderId" type="xs:string" />
+					<xs:element name="state" type="xs:string" />
+					<xs:element name="text" type="xs:string" minOccurs="0" />
+					<xs:element name="invoiceText" type="xs:string"
+						minOccurs="0" />
+					<xs:element name="bookingText" type="xs:string"
+						minOccurs="0" />
+					<xs:element name="invoicingDisabled" type="xs:boolean" />
+					<xs:element name="invoicingDisabledReason" type="xs:string"
+						minOccurs="0" />
+					<xs:element name="reasonSpecialPrice" type="xs:string"
+						minOccurs="0" />
+					<xs:element name="creationDate" type="xs:dateTime" />
+					<xs:element name="creator" type="xs:string" />
+					<xs:element name="nocollectInvoice" type="xs:boolean" />
+					<xs:element name="nocrossOrderInvoice" type="xs:boolean" />
+					<xs:element name="complaintText" type="xs:string"
+						minOccurs="0" />
+					<xs:element name="origin" type="xs:string" />
+					<xs:element name="contactPerson" type="object_uidType"
+						minOccurs="0" />
+					<xs:element name="customer" type="object_uidType" />
+					<xs:element name="noCompetitor" type="xs:boolean" />
+					<xs:element name="exclusiveBooking" type="xs:boolean" />
+					<xs:element name="useRebate" type="xs:boolean" />
+					<xs:element name="allowance" type="xs:float" />
+					<xs:element name="useAutomaticAllowance" type="xs:boolean" />
+					<xs:element name="paymentType" type="xs:string" />
+					<xs:element name="invoiceType" type="xs:string" />
+					<xs:element name="bankInfo" type="bankInfoType"
+						minOccurs="0" />
+					<xs:element name="invoiceDispatch" type="dispatchType"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="proofDispatch" type="proofDispatchType"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="confirmationDispatch" type="dispatchType"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="useAsJacket" type="xs:boolean" />
+					<xs:element name="agency" type="object_uidType"
+						minOccurs="0" />
+					<xs:element name="brokerCommission" type="xs:float" />
+					<xs:element name="useLocalPrice" type="xs:boolean" />
+					<xs:element name="salesPerson" type="salesPersonDataType"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="address" type="addressDataType" />
+					<xs:element name="eAddress" type="eAddressDataType" />
+					<xs:element name="insertData" type="insertDataType" />
+					<xs:element name="booking" type="bookingDataType"
+						maxOccurs="unbounded" />
+					<xs:element name="internetFrom" type="xs:dateTime"
+						minOccurs="0" />
+					<xs:element name="internetTo" type="xs:dateTime"
+						minOccurs="0" />
+					<xs:element name="invoiceQuantity" type="xs:int"
+						minOccurs="0" />
+					<xs:element name="fixedPrice" type="xs:float" minOccurs="0" />
+					<xs:element name="fixedPriceReason" type="xs:string"
+						minOccurs="0" />
+					<xs:element name="prepaymentAmount" type="xs:float"
+						minOccurs="0" />
+					<xs:element name="prepaymentDate" type="xs:dateTime"
+						minOccurs="0" />
+					<xs:element name="MetaData" type="keyValueDataType"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="commissionSite" type="siteType"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="deliverySite" type="siteType"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="pbiType">
+		<xs:sequence>
+			<xs:element ref="head" />
+			<xs:element ref="body" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="headType">
+		<xs:sequence>
+			<xs:element ref="version" />
+			<xs:element ref="source" />
+			<xs:element ref="time" />
+			<xs:element ref="message_id" minOccurs="0" />
+			<xs:element ref="meta" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="metaType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:string" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="sourceType">
+		<xs:complexContent>
+			<xs:restriction base="xs:anyType">
+				<xs:attribute name="supplier" type="xs:string" />
+				<xs:attribute name="application" type="xs:string" />
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="object_uidType">
+		<xs:sequence>
+			<xs:element ref="source" minOccurs="0" />
+			<xs:element ref="local_id" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="bodyType">
+		<xs:choice>
+			<xs:element name="defaultCustomerInvoicingData" type="defCustomerInvoicingType" />
+			<xs:element name="result" type="baseResultType" />
+			<xs:element name="sendResult" type="sendOrderCfResultType" />
+			<xs:element name="confirmationResult" type="orderCfResultType" />
+			<xs:element name="orderConfirmationData" type="orderCfDataType" />
+			<xs:element name="orderConfirmationDataList" type="orderCfDataListType" />
+			<xs:element name="orderDocumentDataList" type="orderDocDataListType" />
+			<xs:element name="codeData" type="codeTableDataType"
+				maxOccurs="unbounded" />
+			<xs:element name="insertOrderIDList" type="insertOrderIDListType" />
+			<xs:element name="insertOrderData" type="insertOrderDataType" />
+			<xs:element name="insertOrderPriceData" type="insertOrderPriceDataType" />
+			<xs:element name="defaultAgencyInvoicingData" type="defAgencyInvoicingType" />
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="baseResultType">
+		<xs:simpleContent>
+			<xs:extension base="xs:boolean">
+				<xs:attribute name="message" type="xs:string" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="sendOrderCfResultType">
+		<xs:simpleContent>
+			<xs:extension base="baseResultType">
+				<xs:attribute name="sendTime" type="xs:dateTime" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="orderCfResultType">
+		<xs:simpleContent>
+			<xs:extension base="baseResultType">
+				<xs:attribute name="documentLink" type="xs:anyURI" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="orderCfDataType">
+		<xs:sequence>
+			<xs:element name="object_uid" type="object_uidType" />
+			<xs:element name="order_uid" type="object_uidType" />
+			<xs:element name="confirmationType" type="xs:string" />
+			<xs:element name="printDetails" type="xs:boolean" />
+			<xs:element name="sender" type="object_uidType" />
+			<xs:element name="receiver" type="object_uidType" />
+			<xs:element name="contact" type="object_uidType" />
+			<xs:element name="dispatch" type="dispatchType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="orderCfDataListType">
+		<xs:sequence>
+			<xs:element name="orderConfirmation" type="orderCfDataType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="orderDocKindType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TECHNICAL_SCRIPT" />
+			<xs:enumeration value="COMMERICAL_SCRIPT" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="orderDocDataListType">
+		<xs:sequence>
+			<xs:element name="insertOrderID" type="object_uidType"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="docKind" type="orderDocKindType" />
+	</xs:complexType>
+	<xs:complexType name="dispatchType">
+		<xs:choice>
+			<xs:element name="object_uid" type="object_uidType" />
+			<xs:element name="address" type="addressDataType" />
+			<xs:element name="eAddress" type="eAddressDataType" />
+		</xs:choice>
+		<xs:attribute name="code" type="xs:string" use="optional" />
+		<xs:attribute name="count" type="xs:integer" use="optional" />
+	</xs:complexType>
+	<xs:complexType name="addressDataType">
+		<xs:sequence>
+			<xs:element name="title" type="xs:string" minOccurs="0" />
+			<xs:element name="firstName" type="xs:string" minOccurs="0" />
+			<xs:element name="name" type="xs:string" minOccurs="0" />
+			<xs:element name="street" type="xs:string" minOccurs="0" />
+			<xs:element name="streetNo" type="xs:string" minOccurs="0" />
+			<xs:element name="zipCode" type="xs:string" minOccurs="0" />
+			<xs:element name="city" type="xs:string" minOccurs="0" />
+			<xs:element name="country" type="xs:string" minOccurs="0" />
+			<xs:element name="department" type="xs:string" minOccurs="0" />
+			<xs:element name="object_uid" type="object_uidType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="eAddressDataType">
+		<xs:sequence>
+			<xs:element name="eMail" type="xs:string" minOccurs="0" />
+			<xs:element name="fax" type="xs:string" minOccurs="0" />
+			<xs:element name="phone" type="xs:string" minOccurs="0" />
+			<xs:element name="cellPhone" type="xs:string" minOccurs="0" />
+			<xs:element name="object_uid" type="object_uidType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="codeTableDataType">
+		<xs:sequence>
+			<xs:element name="code" type="xs:string" />
+			<xs:element name="text" type="xs:string" />
+			<xs:element name="isDefault" type="xs:boolean" default="false"
+				minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="codeTableName" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="insertOrderIDListType">
+		<xs:sequence>
+			<xs:element name="insertOrderID" type="object_uidType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="siteType">
+		<xs:sequence>
+			<xs:element name="siteID" type="object_uidType" />
+			<xs:element name="quantity" type="xs:integer" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="insertOrderDataKindType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="REGULAR" />
+			<xs:enumeration value="INVOICEONLY" />
+			<xs:enumeration value="PRODUCTIONONLY" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="insertOrderDataType">
+		<xs:sequence>
+			<xs:element name="object_uid" type="object_uidType" />
+			<xs:element name="displayedOrderId" type="xs:string" />
+			<xs:element name="state" type="xs:string" />
+			<xs:element name="text" type="xs:string" minOccurs="0" />
+			<xs:element name="invoiceText" type="xs:string" minOccurs="0" />
+			<xs:element name="bookingText" type="xs:string" minOccurs="0" />
+			<xs:element name="invoicingDisabled" type="xs:boolean" />
+			<xs:element name="invoicingDisabledReason" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="reasonSpecialPrice" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="creationDate" type="xs:dateTime" />
+			<xs:element name="creator" type="xs:string" />
+			<xs:element name="nocollectInvoice" type="xs:boolean" />
+			<xs:element name="nocrossOrderInvoice" type="xs:boolean" />
+			<xs:element name="complaintText" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="origin" type="xs:string" />
+			<xs:element name="contactPerson" type="object_uidType"
+				minOccurs="0" />
+			<xs:element name="customer" type="object_uidType" />
+			<xs:element name="noCompetitor" type="xs:boolean" />
+			<xs:element name="exclusiveBooking" type="xs:boolean" />
+			<xs:element name="useRebate" type="xs:boolean" />
+			<xs:element name="allowance" type="xs:float" />
+			<xs:element name="useAutomaticAllowance" type="xs:boolean" />
+			<xs:element name="paymentType" type="xs:string" />
+			<xs:element name="invoiceType" type="xs:string" />
+			<xs:element name="bankInfo" type="bankInfoType" minOccurs="0" />
+			<xs:element name="invoiceDispatch" type="dispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="proofDispatch" type="proofDispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="confirmationDispatch" type="dispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="useAsJacket" type="xs:boolean" />
+			<xs:element name="agency" type="object_uidType" minOccurs="0" />
+			<xs:element name="brokerCommission" type="xs:float" />
+			<xs:element name="useLocalPrice" type="xs:boolean" />
+			<xs:element name="salesPerson" type="salesPersonDataType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="address" type="ads:pAddressDataType" />
+			<xs:element name="eAddress" type="ads:eAddressType" />
+			<xs:element name="insertData" type="insertDataType" />
+			<xs:element name="booking" type="bookingDataType"
+				maxOccurs="unbounded" />
+			<xs:element name="internetFrom" type="xs:dateTime"
+				minOccurs="0" />
+			<xs:element name="internetTo" type="xs:dateTime"
+				minOccurs="0" />
+			<xs:element name="invoiceQuantity" type="xs:int"
+				minOccurs="0" />
+			<xs:element name="fixedPrice" type="xs:float" minOccurs="0" />
+			<xs:element name="fixedPriceReason" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="prepaymentAmount" type="xs:float"
+				minOccurs="0" />
+			<xs:element name="prepaymentDate" type="xs:dateTime"
+				minOccurs="0" />
+			<xs:element name="MetaData" type="keyValueDataType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="commissionSite" type="siteType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="deliverySite" type="siteType" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="account" type="xs:string" />
+		<xs:attribute name="kind" type="insertOrderDataKindType" />
+	</xs:complexType>
+	<xs:complexType name="bankInfoType">
+		<xs:sequence>
+			<xs:element name="accountNumber" type="xs:string" />
+			<xs:element name="bankName" type="xs:string" minOccurs="0" />
+			<xs:element name="bankId" type="xs:string" />
+			<xs:element name="IBAN" type="xs:string" minOccurs="0" />
+			<xs:element name="accountOwner" type="xs:string"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="proofDispatchType">
+		<xs:sequence>
+			<xs:element name="dispatch" type="dispatchType" />
+			<xs:element name="proofType" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="salesPersonDataType">
+		<xs:sequence>
+			<xs:element name="salesPersonID" type="object_uidType" />
+			<xs:element name="commission" type="xs:float" />
+			<xs:element name="salesShare" type="xs:float" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="insertDataType">
+		<xs:sequence>
+			<xs:element name="insertID" type="object_uidType" />
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="bookedValues" type="insertAttributesType" />
+			<xs:element name="actualValues" type="insertAttributesType"
+				minOccurs="0" />
+			<xs:element name="insertKind" type="xs:string" />
+			<xs:element name="keyword" type="xs:string" />
+			<xs:element name="category" type="xs:string" />
+			<xs:element name="image" type="xs:anyURI" minOccurs="0" />
+			<xs:element name="useAsJacket" type="xs:boolean" default="false" />
+			<xs:element name="inhouseProduction" type="xs:boolean"
+				default="false" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="insertAttributesType">
+		<xs:sequence>
+			<xs:element name="height" type="xs:integer" default="0"
+				minOccurs="0" />
+			<xs:element name="width" type="xs:integer" default="0"
+				minOccurs="0" />
+			<xs:element name="weight" type="xs:integer" default="0"
+				minOccurs="0" />
+			<xs:element name="pages" type="xs:integer" default="0"
+				minOccurs="0" />
+			<xs:element name="surface" type="xs:string" minOccurs="0" />
+			<xs:element name="fold" type="xs:string" minOccurs="0" />
+			<xs:element name="manualFeed" type="xs:boolean" default="false"
+				minOccurs="0" />
+			<xs:element name="count" type="xs:integer" />
+			<xs:element name="deliveryKind" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="deliverer" type="object_uidType"
+				minOccurs="0" />
+			<xs:element name="printingHouse" type="object_uidType"
+				minOccurs="0" />
+			<xs:element name="deliveryDate" type="xs:dateTime"
+				minOccurs="0" />
+			<xs:element name="restUsage" type="xs:string" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="bookingDataKindType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="INSERTED" />
+			<xs:enumeration value="DIRECT" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="bookingDataType">
+		<xs:sequence>
+			<xs:element name="bookingID" type="object_uidType" />
+			<xs:element name="locationGroupID" type="object_uidType" />
+			<xs:element name="state" type="xs:string" />
+			<xs:element name="targetGroup" type="xs:string" />
+			<xs:element name="manual" type="xs:boolean" />
+			<xs:element name="invoiceDate" type="xs:date" minOccurs="0" />
+			<xs:element name="distributionDate" type="xs:date" />
+			<xs:element name="count" type="xs:integer" />
+			<xs:element name="correctionCount" type="xs:integer"
+				default="0" minOccurs="0" />
+			<xs:element name="specialPrice" type="xs:float" minOccurs="0" />
+			<xs:element name="rebate" type="xs:float" default="0.0"
+				minOccurs="0" />
+			<xs:element name="rebateReason" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="fixedPrice" type="xs:float" minOccurs="0" />
+			<xs:element name="fixedPriceReason" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="noChargeReason" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="useBonus" type="xs:boolean" />
+			<xs:element name="serviceKind" type="xs:string" minOccurs="0" />
+			<xs:element name="servicePrice" type="xs:float" default="0"
+				minOccurs="0" />
+			<xs:element name="production" type="productionDataType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="obeyDropNo" type="xs:boolean" default="false"
+				minOccurs="0" />
+			<xs:element name="obeyOverweight" type="xs:boolean"
+				default="false" minOccurs="0" />
+			<xs:element name="overweightFrom" type="xs:integer"
+				minOccurs="0" />
+			<xs:element name="overweightStep" type="xs:integer"
+				minOccurs="0" />
+			<xs:element name="overweightSpecialPrice" type="xs:float"
+				minOccurs="0" />
+			<xs:element name="distributionKind" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="productionText" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="invoiceText" type="xs:string" minOccurs="0" />
+			<xs:element name="customOverweightStep" type="xs:boolean"
+				minOccurs="0" />
+			<xs:element name="customOverweightFrom" type="xs:boolean"
+				minOccurs="0" />
+			<xs:element name="MetaData" type="keyValueDataType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="kind" type="bookingDataKindType" />
+	</xs:complexType>
+	<xs:complexType name="productionDataType">
+		<xs:sequence>
+			<xs:element name="productionID" type="object_uidType" />
+			<xs:element name="state" type="xs:string" />
+			<xs:element name="locationGroupID" type="object_uidType" />
+			<xs:element name="targetGroup" type="xs:string" />
+			<xs:element name="manual" type="xs:boolean" />
+			<xs:element name="deliveryDate" type="xs:date" />
+			<xs:element name="count" type="xs:integer" />
+			<xs:element name="announceDate" type="xs:date" minOccurs="0" />
+			<xs:element name="announceText" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="delivererWage" type="xs:float" default="0.0"
+				minOccurs="0" />
+			<xs:element name="createPackagingNotes" type="xs:boolean" />
+			<xs:element name="bundleSize" type="xs:integer" />
+			<xs:element name="deliveryNote" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="generalNote" type="xs:string" minOccurs="0" />
+			<xs:element name="commissionPlace" type="object_uidType" />
+			<xs:element name="dropNo" type="xs:integer" />
+			<xs:element name="distributor" type="object_uidType" />
+			<xs:element name="MetaData" type="keyValueDataType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="kind" type="bookingDataKindType" />
+	</xs:complexType>
+	<xs:complexType name="insertOrderPriceDataType">
+		<xs:sequence>
+			<xs:element name="prices" type="bookingPriceDataType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="bookingPriceDataType">
+		<xs:sequence>
+			<xs:element name="bookingID" type="object_uidType" />
+			<xs:element name="defaultPrice" type="xs:float" minOccurs="0" />
+			<xs:element name="customerPrice" type="xs:float"
+				minOccurs="0" />
+			<xs:element name="overweightPrice" type="xs:float"
+				default="0.0" minOccurs="0" />
+			<xs:element name="overweightCustomerPrice" type="xs:float"
+				default="0.0" minOccurs="0" />
+			<xs:element name="bonus" type="xs:float" />
+			<xs:element name="sum" type="xs:float" />
+			<xs:element name="tax" type="xs:float" />
+			<xs:element name="total" type="xs:float" />
+			<xs:element name="allowance" type="xs:float" default="0.0"
+				minOccurs="0" />
+			<xs:element name="currency" type="xs:string" />
+			<xs:element name="disableInvoicing" type="xs:boolean"
+				default="0" minOccurs="0" />
+			<xs:element name="overweightFrom" type="xs:integer"
+				minOccurs="0" />
+			<xs:element name="overweightStep" type="xs:integer"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="defCustomerInvoicingType">
+		<xs:sequence>
+			<xs:element name="rebate" type="xs:float" />
+			<xs:element name="useLocalPrice" type="xs:boolean" />
+			<xs:element name="useAutomaticAllowance" type="xs:boolean" />
+			<xs:element name="allowance" type="xs:float" />
+			<xs:element name="paymentType" type="xs:string" />
+			<xs:element name="invoiceType" type="xs:string" />
+			<xs:element name="bankInfo" type="bankInfoType" minOccurs="0" />
+			<xs:element name="invoiceDispatch" type="dispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="exclusiveBooking" type="xs:boolean" />
+			<xs:element name="noCompetitor" type="xs:boolean" />
+			<xs:element name="useAsJacket" type="xs:boolean" />
+			<xs:element name="enableConfirmation" type="xs:boolean" />
+			<xs:element name="creditInfo" type="xs:string" minOccurs="0" />
+			<xs:element name="dismiss" type="xs:boolean" />
+			<xs:element name="warningInfo" type="xs:string" minOccurs="0" />
+			<xs:element name="proofDispatch" type="proofDispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="confirmationDispatch" type="dispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="salesPerson" type="salesPersonDataType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="defAgencyInvoicingType">
+		<xs:sequence>
+			<xs:element name="brokerCommission" type="xs:float" />
+			<xs:element name="useLocalPrice" type="xs:boolean" />
+			<xs:element name="useAutomaticAllowance" type="xs:boolean" />
+			<xs:element name="allowance" type="xs:float" />
+			<xs:element name="paymentType" type="xs:string" />
+			<xs:element name="invoiceType" type="xs:string" />
+			<xs:element name="bankInfo" type="bankInfoType" minOccurs="0" />
+			<xs:element name="invoiceDispatch" type="dispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="useAsJacket" type="xs:boolean" />
+			<xs:element name="enableConfirmation" type="xs:boolean" />
+			<xs:element name="creditInfo" type="xs:string" minOccurs="0" />
+			<xs:element name="dismiss" type="xs:boolean" />
+			<xs:element name="warningInfo" type="xs:string" minOccurs="0" />
+			<xs:element name="proofDispatch" type="proofDispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="confirmationDispatch" type="dispatchType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="salesPerson" type="salesPersonDataType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="keyValueDataType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="key" type="xs:string" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="ios:InsertOrderType">
+		<xs:complexContent>
+			<xs:extension base="ibi:InsertType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

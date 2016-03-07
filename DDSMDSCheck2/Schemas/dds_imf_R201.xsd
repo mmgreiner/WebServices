@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio - Developer Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
+<xs:schema xmlns:imf="http://www.ifra.com/IfraTrack/imf/4.1"
+	xmlns:icv="http://www.ifra.com/IfraTrack/icv/4.1" xmlns:spine="http://www.abb.com/printing"
+	xmlns:isd="http://www.ifra.com/IfraTrack/isd/4.1" xmlns:dds="http://www.abb.com/printing/distributionDataSynchronization"
+	attributeFormDefault="unqualified" elementFormDefault="qualified"
+	targetNamespace="http://www.abb.com/printing/distributionDataSynchronization"
+	version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- ================ imported schemas =================== -->
+	<xs:import schemaLocation="IfraTrack-4.1-MessageFormat-AS.xsd"
+		namespace="http://www.ifra.com/IfraTrack/imf/4.1" />
+	<xs:import schemaLocation="IfraTrack-4.1-SharedDefinitions-AS.xsd"
+		namespace="http://www.ifra.com/IfraTrack/isd/4.1" />
+	<!-- ********************************************************************************* -->
+	<!-- DDS Definition -->
+	<!-- Revision History: -->
+	<!-- Rev F 2009-05-18/DK Based upon DDS-TechSpec -->
+	<!-- Rev G 2009-05-20/DK Adapted upon DDS-TechSpec -->
+	<!-- Rev H 2010-01-02/MKO Check also uniqueness of DropPoint UID and Drop 
+		UID -->
+	<!-- Rev I 2010-04-28/DK Check also uniqueness of DU.Name -->
+	<!-- ********************************************************************************* -->
+	<!-- *********** SIMPLE TYPES **************************************************** -->
+	<xs:simpleType name="dropNameType">
+		<xs:annotation>
+			<xs:documentation>NameType for Drops</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="50" />
+			<xs:pattern value="[0-9A-Z]*" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="longitudeType">
+		<xs:annotation>
+			<xs:documentation>Geocoordinate longitude type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:fractionDigits value="6" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="latitudeType">
+		<xs:annotation>
+			<xs:documentation>Geocoordinate latitude type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:fractionDigits value="6" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="coordinateFormatType">
+		<xs:annotation>
+			<xs:documentation>Enum for coordinate format</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Mercator" />
+			<xs:enumeration value="Superkonform" />
+			<xs:enumeration value="Geodecimal" />
+			<xs:enumeration value="Geominsek" />
+			<xs:enumeration value="UTM" />
+			<xs:enumeration value="GK" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- *********** COMPLEX TYPES **************************************************** -->
+	<xs:complexType name="AddressType">
+		<xs:sequence>
+			<xs:element name="Street">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="StreetNumber">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="StreetAddOn">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="ZipCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="City">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="Country">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="4" name="AdditionalLine">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="1024" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AdditionalDataType">
+		<xs:annotation>
+			<xs:documentation>Represents a Key/Value collection which can be used
+				recursive</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Key">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100" />
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Value" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AdditionalDataRowType">
+		<xs:annotation>
+			<xs:documentation>Represents a Key/Value collection which can be used
+				recursive extended by a row definition</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="Row"
+				type="dds:AdditionalDataType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BundleParameterType">
+		<xs:annotation>
+			<xs:documentation>Contains settings for the production of the bundles
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="StandardBundleSize">
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MaximalBundleSize">
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="MediumBundleSize">
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MinimalBundleSize">
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="NumberOfStacks">
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContactType">
+		<xs:annotation>
+			<xs:documentation>Contains information like a contakt-name and
+				additional data</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Name">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:choice minOccurs="0">
+				<xs:element minOccurs="0" name="AdditionalData" type="dds:AdditionalDataType" />
+				<xs:element minOccurs="0" name="AdditionalDataRow"
+					type="dds:AdditionalDataRowType" />
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GeoCoordinateType">
+		<xs:annotation>
+			<xs:documentation>Represents the geografic coordinates of a point
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="0" default="Geodecimal" name="CoordinateFormat"
+				type="dds:coordinateFormatType" />
+			<xs:element name="Latitude" type="dds:latitudeType" />
+			<xs:element name="Longitude" type="dds:longitudeType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TopSheetType">
+		<xs:annotation>
+			<xs:documentation>Contains the topsheet and additional topsheet
+				information</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="0" default="true"
+				name="TopsheetOnStandardBundle" type="xs:boolean" />
+			<xs:element minOccurs="0" default="1" name="Layout">
+				<xs:annotation>
+					<xs:documentation>Mostly Layoutnumber as string</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Data" type="dds:AdditionalDataType" />
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalData"
+				type="dds:AdditionalDataType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TransportOrderType">
+		<xs:annotation>
+			<xs:documentation>Groups all drops ans subscriptions of the same
+				delivery good</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" ref="isd:ObjectUID" />
+			<xs:element default="1" name="Version">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minExclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" default="false" name="SetAsCurrentVersion"
+				type="xs:boolean" />
+			<xs:element minOccurs="0" default="false" name="DoExport"
+				type="xs:boolean" />
+			<xs:element minOccurs="0" name="ExportFileName">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="255" />
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DeliveryGood" type="dds:DeliveryGoodType" />
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="Drop"
+				type="dds:DropType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TransportPlanType">
+		<xs:annotation>
+			<xs:documentation>Represents an aggregation of versioned delivery
+				units (versional Info is for future use)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" ref="isd:ObjectUID" />
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="DeliveryUnit"
+				type="dds:DeliveryUnitType" />
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *********** DELIVERY GOOD Definition***************************************** -->
+	<xs:complexType name="DeliveryGoodType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Abstract object whith derviations
+			</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="ProducedEditionType">
+		<xs:annotation>
+			<xs:documentation>An edition will be produced and has therefore to
+				macht with the planning data </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent mixed="false">
+			<xs:extension base="dds:DeliveryGoodType">
+				<xs:sequence>
+					<xs:element name="Name">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1" />
+								<xs:maxLength value="50" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="ProductionOrderShortName">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1" />
+								<xs:maxLength value="12" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="PublicationDate" type="xs:date" />
+					<xs:element name="EditionShortName">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="50" />
+								<xs:minLength value="1" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="Description">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="500" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:choice minOccurs="0">
+						<xs:element minOccurs="0" name="AdditionalData" type="dds:AdditionalDataType" />
+						<xs:element minOccurs="0" name="AdditionalDataRow"
+							type="dds:AdditionalDataRowType" />
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ShippedEditionType">
+		<xs:annotation>
+			<xs:documentation>Defines an edition which is not produced but
+				delivered</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent mixed="false">
+			<xs:extension base="dds:DeliveryGoodType">
+				<xs:sequence>
+					<xs:element name="Name">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1" />
+								<xs:maxLength value="50" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="PublicationDate" type="xs:date" />
+					<xs:element name="EditionShortName">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="50" />
+								<xs:minLength value="1" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="Description">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="500" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="Weight">
+						<xs:annotation>
+							<xs:documentation>Weight in [g] per copy</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="1" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="Height">
+						<xs:annotation>
+							<xs:documentation>Height in [mm] of copy</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="1" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="Width">
+						<xs:annotation>
+							<xs:documentation>Width in [mm] of copy</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="1" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="Thickness">
+						<xs:annotation>
+							<xs:documentation>Thickness in [mm] per copy</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="1" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="NumberOfPages">
+						<xs:annotation>
+							<xs:documentation>Number of pages per copy</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="0" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element minOccurs="0" name="FoldType">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1" />
+								<xs:maxLength value="50" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:choice minOccurs="0">
+						<xs:element minOccurs="0" name="AdditionalData" type="dds:AdditionalDataType" />
+						<xs:element minOccurs="0" name="AdditionalDataRow"
+							type="dds:AdditionalDataRowType" />
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- *********** COMPLEX TYPES derived from AbstractObject ***************** -->
+	<xs:complexType name="DDSDocumentType">
+		<xs:annotation>
+			<xs:documentation>Contains DDS Document information
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent mixed="false">
+			<xs:extension base="isd:AbstractObject">
+				<xs:sequence>
+					<xs:element name="TransportLogisticsName">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1" />
+								<xs:maxLength value="255" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="DeliveryOrderName">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1" />
+								<xs:maxLength value="50" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="DeliveryDate" type="xs:date" />
+					<xs:element minOccurs="0" name="ExpirationDate" type="xs:date">
+						<xs:annotation>
+							<xs:documentation>Default = DeliveryDate + 1day
+								Values less than
+								Deliverydate will be ignored</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="TransportPlan"
+						type="dds:TransportPlanType">
+						<xs:annotation>
+							<xs:documentation>List of transportplans</xs:documentation>
+						</xs:annotation>
+						<xs:unique name="UniqueDropPointId">
+							<xs:selector xpath="./dds:DeliveryUnit/dds:DropPoint/isd:ObjectUID" />
+							<xs:field xpath="." />
+						</xs:unique>
+						<xs:unique name="UniqueDeliveryUnitName">
+							<xs:selector xpath="./dds:DeliveryUnit/dds:Name" />
+							<xs:field xpath="." />
+						</xs:unique>
+					</xs:element>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="TransportOrder"
+						type="dds:TransportOrderType">
+						<xs:annotation>
+							<xs:documentation>List of transportorders</xs:documentation>
+						</xs:annotation>
+						<xs:unique name="UniqueDropId">
+							<xs:selector xpath="./dds:Drop/isd:ObjectUID" />
+							<xs:field xpath="." />
+						</xs:unique>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DeliveryUnitType">
+		<xs:annotation>
+			<xs:documentation>Represents the whole or a part of a vehicle tour
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" ref="isd:ObjectUID" />
+			<xs:element name="Name">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+						<xs:minLength value="1" />
+						<xs:pattern value="[0-9A-Z]*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="Description">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="SequenceNo">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="Priority">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="PickupNoLaterThan" type="xs:time" />
+			<xs:choice id="AdditionalData" minOccurs="0">
+				<xs:element minOccurs="0" name="AdditionalData" type="dds:AdditionalDataType" />
+				<xs:element minOccurs="0" name="AdditionalDataRow"
+					type="dds:AdditionalDataRowType" />
+			</xs:choice>
+			<xs:element maxOccurs="unbounded" name="DropPoint" type="dds:DropPointType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DropPointType">
+		<xs:annotation>
+			<xs:documentation>Represents the point where the vehicle stops and
+				drops are dropped</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" ref="isd:ObjectUID" />
+			<xs:element name="Name">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+						<xs:minLength value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="Description">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SequenceIndex" type="xs:integer" />
+			<xs:element minOccurs="0" name="Address" type="dds:AddressType" />
+			<xs:element minOccurs="0" name="GeoCoordinate" type="dds:GeoCoordinateType" />
+			<xs:element minOccurs="0" name="BeginDeliveryTime" type="xs:dateTime" />
+			<xs:element minOccurs="0" name="EndDeliveryTime" type="xs:dateTime" />
+			<xs:element minOccurs="0" name="Contact" type="dds:ContactType" />
+			<xs:choice minOccurs="0">
+				<xs:element minOccurs="0" name="AdditionalData" type="dds:AdditionalDataType" />
+				<xs:element minOccurs="0" name="AdditionalDataRow"
+					type="dds:AdditionalDataRowType" />
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DropType">
+		<xs:annotation>
+			<xs:documentation>Represents information used to produce the bundles
+				etc. The quantities are assigned by the subscription
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" ref="isd:ObjectUID" />
+			<xs:element name="Name">
+				<xs:simpleType>
+					<xs:restriction base="dds:dropNameType">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="Description">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" default="DEFAULT" name="ProductionSite">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DropType">
+				<xs:annotation>
+					<xs:documentation>The number spaces are defined as follows:
+						0 – 100
+						reserved drop types
+						&gt; 100 customer specific drop types
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="BundleParameter" type="dds:BundleParameterType" />
+			<xs:element minOccurs="0" name="TopSheet" type="dds:TopSheetType" />
+			<xs:element minOccurs="0" name="DeliveryZoneName">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="DeliveryZoneNumber" type="xs:integer" />
+			<xs:element minOccurs="0" name="DeliveryZoneDescription">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="Contact" type="dds:ContactType" />
+			<xs:element name="DropPointLink" type="isd:LinkType" />
+			<xs:choice minOccurs="0">
+				<xs:element minOccurs="0" name="AdditionalData" type="dds:AdditionalDataType" />
+				<xs:element minOccurs="0" name="AdditionalDataRow"
+					type="dds:AdditionalDataRowType" />
+			</xs:choice>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="Subscription"
+				type="dds:SubscriptionType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SubscriptionType">
+		<xs:annotation>
+			<xs:documentation>Subscription represents the quantity to be
+				produced. The quantity is related to the location- and target group
+				of the ABB-MDS</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" ref="isd:ObjectUID" />
+			<xs:element name="Quantity">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="LocationGroupCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="3" />
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="TargetGroupCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="3" />
+						<xs:maxLength value="50" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" default="false" name="PrintTextOnCopy"
+				type="xs:boolean" />
+			<xs:element minOccurs="0" name="TextOnEachCopy" type="dds:AdditionalDataType" />
+			<xs:element minOccurs="0" name="FileLocationSingleCopyText"
+				type="xs:anyURI" />
+			<xs:element minOccurs="0" name="SingleCopyText" type="dds:AdditionalDataType" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

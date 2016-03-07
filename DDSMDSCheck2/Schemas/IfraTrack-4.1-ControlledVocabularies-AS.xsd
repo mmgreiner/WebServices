@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.ifra.com/IfraTrack/icv/4.1" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:isx="http://www.ifra.com/schema-extensions/1.0" targetNamespace="http://www.ifra.com/IfraTrack/icv/4.1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="4.1.0" id="IfraTrack-4.1.0-ControlledVocabularies-AS-4" isx:status="ApprovedSpecification" isx:internalVersion="4">
+	<!-- -->
+	<xs:annotation>
+		<xs:appinfo>
+			<dc:creator>IFRA</dc:creator>
+			<dc:date>2008-12-01</dc:date>
+			<dc:rights>Copyright &#169; 2008 IFRA All rights reserved.</dc:rights>
+		</xs:appinfo>
+		<xs:documentation>IFRA Track Controlled Vocabularies (icv) Schema</xs:documentation>
+		<xs:documentation>Version: 4.1</xs:documentation>
+	</xs:annotation>
+	<!-- -->
+	<!-- ================================================================-->
+	<!-- ==================  Recommended Controlled Vocabularies =================== -->
+	<!-- ================================================================-->
+	<!-- -->
+	<!-- ==================  PageFormatType =================== -->
+	<xs:complexType name="PageFormatType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractPageFormatType">
+				<xs:enumeration value="broadsheet"/>
+				<xs:enumeration value="tabloid"/>
+				<xs:enumeration value="halftabloid"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="FieldAllocationType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractFieldAllocationType">
+				<xs:enumeration value="no_plate"/>
+				<xs:enumeration value="dummy_plate"/>
+				<xs:enumeration value="image_plate"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="PressWebElementType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractPressWebElementType">
+				<xs:enumeration value="reelstand"/>
+				<xs:enumeration value="reelstand_spreadunit"/>
+				<xs:enumeration value="reelstand_webaligner"/>
+				<xs:enumeration value="weblead_pu_variant"/>
+				<xs:enumeration value="printingspot"/>
+				<xs:enumeration value="dryer"/>
+				<xs:enumeration value="chillroller"/>
+				<xs:enumeration value="chillroller_webaligner"/>
+				<xs:enumeration value="inlet"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="PressPartialWebElementType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractPressPartialWebElementType">
+				<xs:enumeration value="inlet"/>
+				<xs:enumeration value="inletlevel"/>
+				<xs:enumeration value="turnerlevel"/>
+				<xs:enumeration value="baywindow_out"/>
+				<xs:enumeration value="baywindow_in"/>
+				<xs:enumeration value="deturning_roller"/>
+				<xs:enumeration value="outletlevel"/>
+				<xs:enumeration value="former"/>
+				<xs:enumeration value="folder"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="PositionOfKeyBundleType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractPositionOfKeyBundleType">
+				<xs:enumeration value="acc_mailroom_settings"/>
+				<xs:enumeration value="first_bundle"/>
+				<xs:enumeration value="last_bundle"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="WebSideType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractWebSideType">
+				<xs:enumeration value="left"/>
+				<xs:enumeration value="right"/>
+				<xs:enumeration value="both"/>
+				<xs:enumeration value="undefined"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="ProductionActivityStateType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractActivityStateType">
+				<xs:enumeration value="not_started"/>
+				<xs:enumeration value="in_progress"/>
+				<xs:enumeration value="on_hold"/>
+				<xs:enumeration value="completed"/>
+				<xs:enumeration value="aborted"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="MessageClassType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractMessageClassType">
+				<xs:enumeration value="first_stop"/>
+				<xs:enumeration value="further_stop"/>
+				<xs:enumeration value="warning"/>
+				<xs:enumeration value="event"/>
+				<xs:enumeration value="user"/>
+				<xs:enumeration value="lock"/>
+				<xs:enumeration value="diagnosis"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="SpecialEventTypeType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractSpecialEventTypeType">
+				<xs:enumeration value="last_plate"/>
+				<xs:enumeration value="impression_on"/>
+				<xs:enumeration value="impression_off"/>
+				<xs:enumeration value="reel_change"/>
+				<xs:enumeration value="plate_update"/>
+				<xs:enumeration value="web_break"/>
+				<xs:enumeration value="waste_open"/>
+				<xs:enumeration value="waste_close"/>
+				<xs:enumeration value="waste_open_delayed"/>
+				<xs:enumeration value="waste_close_delayed"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="DropProductionTypeType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractDropProductionTypeType">
+				<xs:enumeration value="bundles"/>
+				<xs:enumeration value="nothing"/>
+				<xs:enumeration value="topsheet_only"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="PushOutDirectionType">
+		<xs:simpleContent>
+			<xs:restriction base="AbstractPushOutDirectionType">
+				<xs:enumeration value="acc_mailroom_settings"/>
+				<xs:enumeration value="to_mailroom"/>
+				<xs:enumeration value="to_ramp"/>
+				<xs:enumeration value="alternating"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- -->
+	<!-- ================================================================-->
+	<!-- ==================  Abstract Types for CV Definitions=================== -->
+	<!-- ================================================================-->
+	<xs:complexType name="AbstractPageFormatType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractFieldAllocationType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractPressWebElementType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractPressPartialWebElementType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractPositionOfKeyBundleType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractWebSideType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractMessageClassType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractSpecialEventTypeType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractDropProductionTypeType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractPushOutDirectionType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractActivityStateType" abstract="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:schema>

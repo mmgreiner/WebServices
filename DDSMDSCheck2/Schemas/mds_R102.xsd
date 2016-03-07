@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio (http://www.liquid-technologies.com)-->
+<!-- Extension schema to the IFRATrack Schema -->
+<!-- Marketing Data -->
+<!-- History: -->
+<!--         2009-05-18 Dob -->
+<xs:schema xmlns:ipoPrintingCompany="http://www.abb.com/printing" xmlns:icv="http://www.ifra.com/IfraTrack/icv/4.1" 
+           xmlns:isd="http://www.ifra.com/IfraTrack/isd/4.1" 
+           xmlns:mds="http://www.abb.com/printing/marketingDataSynchronization/R102" 
+           xmlns:ipo="http://www.ifra.com/IfraTrack/ipo/4.1" attributeFormDefault="unqualified" 
+           elementFormDefault="qualified" 
+           targetNamespace="http://www.abb.com/printing/marketingDataSynchronization/R102" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- -->
+  <!-- ================  imported schemas =================== -->
+  <xs:import schemaLocation="IfraTrack-4.1-MessageFormat-AS.xsd" namespace="http://www.ifra.com/IfraTrack/imf/4.1" />
+  <xs:import schemaLocation="IfraTrack-4.1-SharedDefinitions-AS.xsd" namespace="http://www.ifra.com/IfraTrack/isd/4.1" />
+  <!-- Predefinition of valueType-->
+  <xs:simpleType name="valueTypeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="string" />
+      <xs:enumeration value="integer" />
+      <xs:enumeration value="decimal" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of valueType-->
+  <xs:simpleType name="groupTypeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="sales" />
+      <xs:enumeration value="logistics" />
+      <xs:enumeration value="production" />
+      <xs:enumeration value="direct_sales" />
+      <xs:enumeration value="direct_logistics" />
+      <xs:enumeration value="direct_production" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of  descriptionType-->
+  <xs:simpleType name="descriptionType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="256" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of nameType-->
+  <xs:simpleType name="nameType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="2" />
+      <xs:maxLength value="50" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of longStringType-->
+  <xs:simpleType name="longStringType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="3" />
+      <xs:maxLength value="2000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of string1024Type-->
+  <xs:simpleType name="string1024Type">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="1024" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of idStringType-->
+  <xs:simpleType name="idStringType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="3" />
+      <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of vendibleType-->
+  <xs:simpleType name="vendibleType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="yes" />
+      <xs:enumeration value="manual" />
+      <xs:enumeration value="no" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of weekday Type-->
+  <xs:simpleType name="weekdayType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="all" />
+      <xs:enumeration value="mo" />
+      <xs:enumeration value="tu" />
+      <xs:enumeration value="we" />
+      <xs:enumeration value="th" />
+      <xs:enumeration value="fr" />
+      <xs:enumeration value="sa" />
+      <xs:enumeration value="su" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of dateListType-->
+  <xs:simpleType name="weekdayListType">
+    <xs:list itemType="mds:weekdayType" />
+  </xs:simpleType>
+  <!-- Define a salesCount Type-->
+  <xs:complexType name="salesCountType">
+    <xs:simpleContent>
+      <xs:extension base="xs:integer">
+        <xs:attribute name="code" type="mds:nameType" use="required" />
+        <xs:attribute name="text" type="mds:nameType" use="required" />
+        <xs:attribute name="validFrom" type="xs:date" use="optional" />
+        <xs:attribute name="validTo" type="xs:date" use="optional" />
+        <xs:attribute name="validAt" type="xs:date" use="optional" />
+        <xs:attribute default="all" name="weekdays" type="mds:weekdayListType" use="optional" />
+        <xs:attribute name="edition" type="mds:nameType" use="required" />
+        <xs:attribute name="publication" type="mds:nameType" use="required" />
+        <xs:attribute name="longEditionName" type="mds:descriptionType" use="required" />
+        <xs:attribute name="cockpitSystem" type="mds:nameType" use="optional" />
+        <xs:attribute default="0" name="editionSortIdx" type="xs:integer" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- Define a household Type-->
+  <xs:complexType name="householdType">
+    <xs:simpleContent>
+      <xs:extension base="xs:integer">
+        <xs:attribute name="code" type="mds:nameType" use="required" />
+        <xs:attribute name="text" type="mds:nameType" use="required" />
+        <xs:attribute name="validFrom" type="xs:date" use="optional" />
+        <xs:attribute name="validTo" type="xs:date" use="optional" />
+        <xs:attribute name="validAt" type="xs:date" use="optional" />
+        <xs:attribute default="all" name="weekdays" type="mds:weekdayListType" use="optional" />
+        <xs:attribute default="yes" name="vendible" type="mds:vendibleType" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- Define a marketing data Type-->
+  <xs:complexType name="marketingType">
+    <xs:simpleContent>
+      <xs:extension base="mds:longStringType">
+        <xs:attribute name="name" type="mds:nameType" use="required" />
+        <xs:attribute name="valueType" type="mds:valueTypeType" use="required" />
+        <xs:attribute name="unit" type="mds:nameType" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- Predefinition of  addressType-->
+  <xs:complexType name="addressType">
+    <xs:sequence>
+      <xs:element name="Street">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="50" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="StreetNumber">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="StreetAddOn">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ZipCode">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="City">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Country">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="4" name="AdditionalLine">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="1024" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- -->
+  <!-- Predefinition of  longitudeType-->
+  <xs:simpleType name="longitudeType">
+    <xs:restriction base="xs:decimal">
+      <xs:fractionDigits value="6" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- -->
+  <!-- Predefinition of  latitudeType-->
+  <xs:simpleType name="latitudeType">
+    <xs:restriction base="xs:decimal">
+      <xs:fractionDigits value="6" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Predefinition of  coordinateFormatType-->
+  <xs:simpleType name="coordinateFormatType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Mercator" />
+      <xs:enumeration value="Superkonform" />
+      <xs:enumeration value="Geodecimal" />
+      <xs:enumeration value="Geominsek" />
+      <xs:enumeration value="UTM" />
+      <xs:enumeration value="GK" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- -->
+  <!-- Predefinition of actionType-->
+  <xs:simpleType name="actionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="unknown" />
+      <xs:enumeration value="add" />
+      <xs:enumeration value="remove" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Location">
+    <xs:complexContent mixed="false">
+      <xs:extension base="isd:AbstractObject">
+        <xs:sequence>
+          <xs:element name="Name" type="mds:nameType" />
+          <xs:element minOccurs="0" name="Address" type="mds:addressType" />
+          <xs:element minOccurs="0" name="Description" type="mds:descriptionType" />
+          <xs:element name="Longitude" type="mds:longitudeType" />
+          <xs:element name="Latitude" type="mds:latitudeType" />
+          <xs:element minOccurs="0" name="CoordinateFormat" type="mds:coordinateFormatType" />
+          <xs:element minOccurs="0" name="GroupKey" type="mds:nameType" />
+          <xs:element minOccurs="0" name="GroupValue" type="mds:nameType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="commissionSiteType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="commission" />
+      <xs:enumeration value="delivery" />
+      <xs:enumeration value="commission_delivery" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="CommissionSite">
+    <xs:complexContent mixed="false">
+      <xs:extension base="isd:AbstractObject">
+        <xs:sequence>
+          <xs:element name="Name" type="mds:nameType" />
+          <xs:element name="Account" type="mds:nameType" />
+          <xs:element name="SiteType" type="mds:commissionSiteType" />
+          <xs:element minOccurs="0" default="false" name="ContractorSite" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Address" type="mds:addressType" />
+          <xs:element minOccurs="0" name="Description" type="mds:descriptionType" />
+          <xs:element minOccurs="0" name="Longitude" type="mds:longitudeType" />
+          <xs:element minOccurs="0" name="Latitude" type="mds:latitudeType" />
+          <xs:element minOccurs="0" name="CoordinateFormat" type="mds:coordinateFormatType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ContactData" type="mds:contactType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- Define a location reference Type-->
+  <xs:complexType name="locationListType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Location" type="mds:Location" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Location_Uid" type="isd:ObjectUIDType" />
+    </xs:sequence>
+    <xs:attribute default="unknown" name="action" type="mds:actionType" use="optional" />
+  </xs:complexType>
+  <!-- Define a location reference Type-->
+  <xs:complexType name="leafDataListType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Household" type="mds:householdType" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SalesData" type="mds:salesCountType" />
+      <xs:element name="LocationData" type="mds:locationListType" />
+    </xs:sequence>
+    <xs:attribute default="unknown" name="action" type="mds:actionType" use="optional" />
+  </xs:complexType>
+  <!-- Define a contact Type-->
+  <xs:complexType name="contactType">
+    <xs:sequence>
+      <xs:element name="Contact_Uid" type="isd:ObjectUIDType" />
+      <xs:element name="Role" type="mds:nameType" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- Define a location reference Type-->
+  <xs:complexType name="childrenType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Child_Uid" type="isd:ObjectUIDType" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- Define a free key integer value data Type-->
+  <xs:complexType name="keyIntegerType">
+    <xs:simpleContent>
+      <xs:extension base="xs:nonNegativeInteger">
+        <xs:attribute name="name" type="mds:nameType" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- Predefinition of dateListType-->
+  <xs:simpleType name="dateListType">
+    <xs:list itemType="xs:date" />
+  </xs:simpleType>
+  <!-- Predefinition of contentType-->
+  <xs:simpleType name="contentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="complete" />
+      <xs:enumeration value="marketingData" />
+      <xs:enumeration value="salesDataHouseholdData" />
+      <xs:enumeration value="childrenData" />
+      <xs:enumeration value="childrenDiffData" />
+      <xs:enumeration value="householdData" />
+      <xs:enumeration value="baseData" />
+      <xs:enumeration value="salesData" />
+      <xs:enumeration value="terminateDate" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Extented definition of the ObjectType-->
+  <xs:complexType name="LocationGroup">
+    <xs:complexContent mixed="false">
+      <xs:extension base="isd:AbstractObject">
+        <xs:sequence>
+          <xs:element default="sales" name="GroupType" type="mds:groupTypeType" />
+          <xs:element default="0" name="SeqIndex" type="xs:integer" />
+          <xs:element default="false" name="IsRoot" type="xs:boolean" />
+          <xs:element minOccurs="0" name="GroupingCode" type="mds:nameType" />
+          <xs:element name="Account" type="mds:nameType" />
+          <xs:element name="Name" type="mds:longStringType" />
+          <xs:element minOccurs="0" default="yes" name="Vendible" type="mds:vendibleType" />
+          <xs:element minOccurs="0" default="false" name="ContractorArea" type="xs:boolean" />
+          <xs:element minOccurs="0" default="true" name="ActiveOnAnyDay" type="xs:boolean" />
+          <xs:element minOccurs="0" default="false" name="ActiveOnMonday" type="xs:boolean" />
+          <xs:element minOccurs="0" default="false" name="ActiveOnTuesday" type="xs:boolean" />
+          <xs:element minOccurs="0" default="false" name="ActiveOnWednesday" type="xs:boolean" />
+          <xs:element minOccurs="0" default="false" name="ActiveOnThursday" type="xs:boolean" />
+          <xs:element minOccurs="0" default="false" name="ActiveOnFriday" type="xs:boolean" />
+          <xs:element minOccurs="0" default="false" name="ActiveOnSaturday" type="xs:boolean" />
+          <xs:element minOccurs="0" default="false" name="ActiveOnSunday" type="xs:boolean" />
+          <xs:element minOccurs="0" name="ActiveOnDate" type="mds:dateListType" />
+          <xs:element minOccurs="0" name="DeactivatedOnDate" type="mds:dateListType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="MarketingData" type="mds:marketingType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ContactData" type="mds:contactType" />
+          <xs:choice minOccurs="0">
+            <xs:element name="LeafData" type="mds:leafDataListType" />
+            <xs:element name="Children" type="mds:childrenType" />
+          </xs:choice>
+          <xs:element minOccurs="0" name="Code" type="mds:nameType" />
+          <xs:element name="ValidFrom" type="xs:date" />
+          <xs:element minOccurs="0" name="ValidTo" type="xs:date" />
+          <xs:element minOccurs="0" name="ExternalIdReference" type="mds:idStringType" />
+          <xs:element minOccurs="0" name="CommissionSite" type="isd:ObjectUIDType" />
+          <xs:element minOccurs="0" name="SalesFilterPublication" type="mds:nameType" />
+          <xs:element minOccurs="0" name="SalesFilterEdition" type="mds:nameType" />
+        </xs:sequence>
+        <xs:attribute default="complete" name="content" type="mds:contentType" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

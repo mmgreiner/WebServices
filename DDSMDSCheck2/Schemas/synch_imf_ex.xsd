@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!-- Extension schema to the IFRATrack Schema -->
+<!-- Extensions for of all ifra track like interfaces with synch layer -->
+<!-- History: -->
+<!--         2005-06-06 HRI -->
+<xs:schema targetNamespace="http://www.abb.com/printing/interfaceSynchronization" xmlns:imf="http://www.ifra.com/imf/3.0" xmlns="http://www.abb.com/printing/interfaceSynchronization" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.ifra.com/imf/3.0" schemaLocation="imf.xsd"/>
+	<!-- Predefinition of the actions of a synchronization function as a common data type -->
+	<xs:simpleType name="SynchronizationActionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="begin"/>
+			<xs:enumeration value="actual"/>
+			<xs:enumeration value="send"/>
+			<xs:enumeration value="update"/>
+			<xs:enumeration value="endupdate"/>
+			<xs:enumeration value="end"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Definition of a function type-->
+	<xs:complexType name="FunctionCallType"/>
+	<!-- a synchronize type -->
+	<xs:complexType name="SynchronizationType">
+		<xs:complexContent>
+			<xs:extension base="FunctionCallType">
+				<xs:attribute name="action" type="SynchronizationActionType" use="required"/>
+				<xs:attribute name="timestamp" type="xs:dateTime" use="required"/>
+				<xs:attribute name="number" type="xs:integer" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Predefinition of the actions of a RequiredSpace function as a common data type -->
+	<xs:simpleType name="AcknowledgeResultType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OK"/>
+			<xs:enumeration value="ERROR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- a acknowledge  type -->
+	<xs:complexType name="AcknowledgeType">
+		<xs:complexContent>
+			<xs:extension base="FunctionCallType">
+				<xs:attribute name="result" type="AcknowledgeResultType" use="required"/>
+				<xs:attribute name="message_id" type="xs:integer" use="required"/>
+				<xs:attribute name="error_no" type="xs:integer" use="optional"/>
+				<xs:attribute name="error_text" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Definition of a abstract function element-->
+	<xs:element name="abstract_function" type="FunctionCallType" abstract="true"/>
+	<!-- Definition of the all the functions-->
+	<xs:element name="synchronize" type="SynchronizationType" substitutionGroup="abstract_function"/>
+	<xs:element name="acknowledge" type="AcknowledgeType" substitutionGroup="abstract_function"/>
+	<!-- Definition of a  abstract function type-->
+	<xs:complexType name="FunctionType">
+		<xs:sequence>
+			<xs:element ref="abstract_function"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Definition of the all the functions-->
+	<xs:element name="function" type="FunctionType"/>
+	<!-- Extented definition of the HeaderType-->
+	<xs:complexType name="HeadExType">
+		<xs:complexContent>
+			<xs:extension base="imf:HeadType">
+				<xs:sequence>
+					<xs:element ref="function" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

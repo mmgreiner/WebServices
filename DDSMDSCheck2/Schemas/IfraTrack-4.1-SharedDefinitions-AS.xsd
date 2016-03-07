@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:isd="http://www.ifra.com/IfraTrack/isd/4.1" xmlns:imf="http://www.ifra.com/IfraTrack/imf/4.1" xmlns="http://www.ifra.com/IfraTrack/isd/4.1" xmlns:icv="http://www.ifra.com/IfraTrack/icv/4.1" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:isx="http://www.ifra.com/schema-extensions/1.0" targetNamespace="http://www.ifra.com/IfraTrack/isd/4.1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="4.1.0" id="IfraTrack-4.1.0-SharedTypes-AS-8" isx:status="ApprovedSpecification" isx:internalVersion="8">
+	<!-- -->
+	<!-- ================  imported schemas =================== -->
+	<xs:import namespace="http://www.ifra.com/IfraTrack/icv/4.1" schemaLocation="IfraTrack-4.1-ControlledVocabularies-AS.xsd"/>
+	<!-- -->
+	<xs:annotation>
+		<xs:appinfo>
+			<dc:creator>IFRA</dc:creator>
+			<dc:date>2008-12-01</dc:date>
+			<dc:rights>Copyright &#169; 2008 IFRA All rights reserved.</dc:rights>
+		</xs:appinfo>
+		<xs:documentation>IFRA Track Shared Definitions (isd) Schema</xs:documentation>
+		<xs:documentation>Version: 4.1</xs:documentation>
+	</xs:annotation>
+	<!-- -->
+	<!-- ===================  AbstractObject Type  ====================== -->
+	<xs:complexType name="AbstractObject" abstract="true">
+		<xs:sequence>
+			<xs:element ref="ObjectUID"/>
+		</xs:sequence>
+		<xs:attribute name="action" type="ActionType" use="required"/>
+	</xs:complexType>
+	<!-- -->
+	<!-- ===================  ObjectUIDType  ====================== -->
+	<xs:complexType name="ObjectUIDType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="supplier" type="xs:string"/>
+				<xs:attribute name="application" type="xs:string"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- ===================  SourceType  ====================== -->
+	<xs:complexType name="SourceType">
+		<xs:attribute name="supplier" type="xs:string" use="required"/>
+		<xs:attribute name="application" type="xs:string" use="required"/>
+	</xs:complexType>
+	<!-- ===================  LinkType  ====================== -->
+	<xs:complexType name="LinkType">
+		<xs:sequence>
+			<xs:element ref="ObjectUID"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ==================  AddressType =================== -->
+	<xs:complexType name="AddressType">
+		<xs:sequence>
+			<xs:element ref="AddressData"/>
+			<xs:element ref="AddressLayout"/>
+			<xs:element ref="SequenceIndex"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<!-- ==================  SheetType =================== -->
+	<xs:complexType name="SheetType">
+		<xs:sequence>
+			<xs:element ref="SheetText"/>
+			<xs:element ref="SheetLayout"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<!-- ==================  BundleParameterType =================== -->
+	<xs:complexType name="BundleParameterType">
+		<xs:sequence>
+			<xs:element ref="StdBundleSize"/>
+			<xs:element ref="MinBundleSize" minOccurs="0"/>
+			<xs:element ref="MaxBundleSize"/>
+			<xs:element ref="NoOfStacks"/>
+			<xs:element ref="MaxStackSize" minOccurs="0"/>
+			<xs:element ref="PositionOfKeyBundle" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<!-- ==================  ActivityType =================== -->
+	<xs:complexType name="ActivityType">
+		<xs:sequence>
+			<xs:element ref="Reason" minOccurs="0"/>
+			<xs:element ref="ActivityState"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- -->
+	<!-- -->
+	<!-- ================================================================-->
+	<!-- ==================  Components =================== -->
+	<!-- ================================================================-->
+	<xs:element name="ActivityState" type="icv:AbstractActivityStateType"/>
+	<xs:element name="AddressData" type="TextType"/>
+	<xs:element name="AddressLayout" type="xs:integer"/>
+	<xs:element name="CSVText" type="isd:CSVTextType"/>
+	<xs:element name="Object" type="AbstractObject"/>
+	<xs:element name="ObjectUID" type="ObjectUIDType"/>
+	<xs:element name="MaxBundleSize" type="xs:positiveInteger"/>
+	<xs:element name="MaxStackSize" type="xs:positiveInteger"/>
+	<xs:element name="MinBundleSize" type="xs:positiveInteger"/>
+	<xs:element name="NoOfStacks" type="xs:positiveInteger"/>
+	<xs:element name="PositionOfKeyBundle" type="icv:AbstractPositionOfKeyBundleType"/>
+	<xs:element name="Reason" type="xs:string"/>
+	<xs:element name="SequenceIndex" type="xs:integer"/>
+	<xs:element name="SheetLayout" type="xs:integer"/>
+	<xs:element name="SheetText" type="isd:TextType"/>
+	<xs:element name="StdBundleSize" type="xs:positiveInteger"/>
+	<xs:element name="Text" type="xs:string"/>
+	<xs:element name="TextID" type="xs:string"/>
+	<xs:complexType name="TextType">
+		<xs:choice>
+			<xs:element ref="CSVText"/>
+			<xs:element ref="XMLText" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="XMLText" type="isd:XMLTextType"/>
+	<xs:complexType name="XMLTextType">
+		<xs:sequence>
+			<xs:element ref="TextID"/>
+			<xs:element ref="Text"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ================================================================-->
+	<!-- ==================  Simple Types =================== -->
+	<!-- ================================================================-->
+	<xs:simpleType name="CSVTextType">
+		<xs:restriction base="xs:string">
+			<!--xs:pattern value="(([\x5C]([^\x3B]{1,}))([\x3B]([^\x5C]{1,})))(([\x5C]([^\x3B]{1,}))([\x3B]([^\x5C]{1,})))*"/-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PhysicalElementIDType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<!-- ================================================================-->
+	<!-- ==================  Mandatory Controlled Vocabularies =================== -->
+	<!-- ================================================================-->
+	<xs:simpleType name="ActionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="put"/>
+			<xs:enumeration value="purge"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RotationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="90"/>
+			<xs:enumeration value="180"/>
+			<xs:enumeration value="270"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- -->
+</xs:schema>

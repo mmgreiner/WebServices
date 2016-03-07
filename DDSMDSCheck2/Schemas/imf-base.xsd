@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.ifra.com/imf/3.0" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:imf="http://www.ifra.com/imf/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- ********* This part of the schema describes the tags used for the messaging format  ********* -->
+	<!-- ********* Note that this part is completely independent from newspaper production   ********* -->
+	<!-- ********* The second part describes the objects, attributes and links in the  model ********* -->
+	<!-- ********* It is the second part that should be refered to in instance documents     ********* -->
+	<!-- ********* the top level object ********* -->
+	<element name="imf" type="imf:ImfType"/>
+	<element name="head" type="imf:HeadType"/>
+	<element name="body" type="imf:BodyType"/>
+	<element name="meta" type="imf:MetaType"/>
+	<element name="message_id" type="string"/>
+	<element name="version" type="string"/>
+	<element name="source" type="imf:SourceType"/>
+	<element name="time" type="dateTime"/>
+	<element name="object" type="imf:ObjectType"/>
+	<element name="object_uid" type="imf:object_uidType"/>
+	<element name="object_path" type="imf:ObjectPathType"/>
+	<element name="path_class" type="imf:PathClassType"/>
+	<element name="path_link" type="imf:PathLinkType"/>
+	<element name="local_id" type="string"/>
+	<element name="reason" type="string"/>
+	<element name="resource" type="imf:ResourceType"/>
+	<element name="abstract_object" type="imf:AbstractObjectType" abstract="true"/>
+	<element name="attributes" type="imf:AttributesType"/>
+	<element name="activities" type="imf:ActivitiesType"/>
+	<element name="activity" type="imf:ActivityType"/>
+	<element name="links" type="imf:LinksType"/>
+	<element name="link" type="imf:LinkType"/>
+	<element name="schedules" type="imf:SchedulesType"/>
+	<element name="abstract_attribute" type="anySimpleType" abstract="true"/>
+	<element name="deadline" type="imf:DeadlineType"/>
+	<element name="planned_resources" type="imf:PlannedResourcesType"/>
+	<element name="schedule_state" type="imf:ScheduleStateType"/>
+	<element name="abstract_link" type="imf:AbstractLinkType" abstract="true"/>
+	<element name="abstract_resource" type="imf:AbstractResourceType" abstract="true"/>
+	<element name="abstract_activity" type="imf:AbstractActivityType" abstract="true"/>
+	<!-- ************ definitions of the types used **************** -->
+	<complexType name="ImfType">
+		<sequence>
+			<element ref="imf:head"/>
+			<element ref="imf:body"/>
+		</sequence>
+	</complexType>
+	<complexType name="HeadType">
+		<sequence>
+			<element ref="imf:version"/>
+			<element ref="imf:source"/>
+			<element ref="imf:time"/>
+			<element ref="imf:message_id" minOccurs="0"/>
+			<element ref="imf:meta" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="MetaType">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="name" type="string"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="SourceType">
+		<complexContent>
+			<restriction base="anyType">
+				<attribute name="supplier" type="string"/>
+				<attribute name="application" type="string"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="object_uidType">
+		<sequence>
+			<element ref="imf:source" minOccurs="0"/>
+			<element ref="imf:local_id"/>
+		</sequence>
+	</complexType>
+	<complexType name="BodyType">
+		<sequence>
+			<element name="object" type="imf:ObjectType" minOccurs="0" maxOccurs="unbounded"/>
+			<!--<element ref="imf:object" minOccurs="0" maxOccurs="unbounded"/>-->
+		</sequence>
+	</complexType>
+	<!-- ********** begin objects ************ -->
+	<complexType name="ObjectType">
+		<sequence>
+			<element ref="imf:abstract_object"/>
+			<group ref="imf:ReferenceGroup"/>
+			<element ref="imf:attributes" minOccurs="0"/>
+			<element ref="imf:activities" minOccurs="0"/>
+			<element ref="imf:links" minOccurs="0"/>
+			<element ref="imf:schedules" minOccurs="0"/>
+		</sequence>
+		<attribute name="action" type="imf:ActionType"/>
+	</complexType>
+	<complexType name="AbstractObjectType">
+		<complexContent>
+			<restriction base="anyType"/>
+		</complexContent>
+	</complexType>
+	<!-- ********** end objects ************ -->
+	<!-- ********** begin attributes ************ -->
+	<complexType name="AttributesType">
+		<sequence>
+			<element ref="imf:abstract_attribute" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<!-- ********** end attributes ************ -->
+	<!-- ********** begin scheduling ************-->
+	<complexType name="SchedulesType">
+		<sequence>
+			<element ref="imf:deadline" minOccurs="0" maxOccurs="unbounded"/>
+			<element ref="imf:planned_resources" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="DeadlineType">
+		<sequence>
+			<choice>
+				<element ref="imf:abstract_attribute"/>
+				<element ref="imf:abstract_activity"/>
+			</choice>
+			<element ref="imf:time"/>
+			<element ref="imf:schedule_state"/>
+		</sequence>
+	</complexType>
+	<complexType name="PlannedResourcesType">
+		<sequence>
+			<element ref="imf:abstract_activity"/>
+			<element ref="imf:resource" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ScheduleStateType">
+		<simpleContent>
+			<extension base="imf:SimpleScheduleStateType">
+				<attribute name="level" type="integer"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<!-- *********** end scheduling **************-->
+	<!-- ********** begin links and paths ***************** -->
+	<group name="ReferenceGroup">
+		<choice>
+			<element ref="imf:object_uid"/>
+			<element ref="imf:object_path"/>
+		</choice>
+	</group>
+	<complexType name="ObjectPathType">
+		<sequence>
+			<element ref="imf:path_class"/>
+			<element ref="imf:path_link" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="PathClassType">
+		<sequence>
+			<choice>
+				<element ref="imf:abstract_object"/>
+				<element ref="imf:abstract_resource"/>
+			</choice>
+			<choice>
+				<element ref="imf:abstract_attribute" minOccurs="0" maxOccurs="unbounded"/>
+				<element ref="imf:object_uid"/>
+			</choice>
+		</sequence>
+	</complexType>
+	<complexType name="PathLinkType">
+		<sequence>
+			<element ref="imf:abstract_link"/>
+			<element ref="imf:abstract_attribute" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="LinksType">
+		<sequence>
+			<element ref="imf:link" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="LinkType">
+		<sequence>
+			<element ref="imf:abstract_link"/>
+			<group ref="imf:ReferenceGroup" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="action" type="imf:LinkActionType"/>
+	</complexType>
+	<complexType name="AbstractLinkType">
+		<complexContent>
+			<restriction base="anyType"/>
+		</complexContent>
+	</complexType>
+	<!-- ********** end links and paths ***************** -->
+	<!-- ********** begin activities ***************** -->
+	<complexType name="ActivitiesType">
+		<sequence>
+			<element ref="imf:activity" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ActivityType">
+		<sequence>
+			<element ref="imf:abstract_activity"/>
+			<element ref="imf:reason" minOccurs="0"/>
+			<element ref="imf:resource" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<simpleType name="AbstractActivityType">
+		<restriction base="string">
+			<enumeration value="completed"/>
+			<enumeration value="in_progress"/>
+			<enumeration value="on_hold"/>
+			<enumeration value="deleted"/>
+			<enumeration value="aborted"/>
+			<enumeration value="not_started"/>
+		</restriction>
+	</simpleType>
+	<!-- ********** end activities ***************** -->
+	<!-- ********** begin resources ***************** -->
+	<complexType name="ResourceType">
+		<sequence>
+			<element ref="imf:abstract_resource"/>
+			<group ref="imf:ReferenceGroup"/>
+		</sequence>
+		<attribute name="role" type="string"/>
+	</complexType>
+	<complexType name="AbstractResourceType">
+		<complexContent>
+			<restriction base="imf:AbstractObjectType"/>
+		</complexContent>
+	</complexType>
+	<!-- ********** end resources ***************** -->
+	<!-- **********  simple types used for setting states etc ***************** -->
+	<simpleType name="SimpleScheduleStateType">
+		<restriction base="string">
+			<enumeration value="warning"/>
+			<enumeration value="late"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="ActionType">
+		<restriction base="string">
+			<enumeration value="create"/>
+			<enumeration value="put"/>
+			<enumeration value="modify"/>
+			<enumeration value="delete"/>
+			<enumeration value="purge"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="LinkActionType">
+		<restriction base="string">
+			<enumeration value="set"/>
+			<enumeration value="add"/>
+			<enumeration value="remove"/>
+		</restriction>
+	</simpleType>
+	<!-- ********** end simple types ***************** -->
+</schema>

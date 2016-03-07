@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Created with Liquid XML Studio (http://www.liquid-technologies.com) -->
+<!-- Extension schema to the IFRATrack Schema -->
+<!-- Extensions for of all ifra track like interfaces a Address Object -->
+<!-- History: -->
+<!-- 2005-12-05 Dob -->
+<!-- 2010-10-20 Greiner: Using IfraTrack 4.1, deriving from Abstract Object -->
+
+<xs:schema xmlns:imf="http://www.ifra.com/imf/4.1" 
+	xmlns:icv="http://www.ifra.com/IfraTrack/icv/4.1"
+	xmlns:isd="http://www.ifra.com/IfraTrack/isd/4.1" 
+	xmlns:spine="http://www.abb.com/printing"
+	xmlns:ads="http://www.abb.com/printing/addressDataSynchronization"
+	targetNamespace="http://www.abb.com/printing/addressDataSynchronization"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	attributeFormDefault="unqualified" elementFormDefault="qualified"
+	version="1.0.2">
+
+	<!-- ================ imported schemas =================== -->
+	<xs:import namespace="http://www.ifra.com/IfraTrack/imf/4.1"
+		schemaLocation="IfraTrack-4.1-MessageFormat-AS.xsd" />
+	<xs:import namespace="http://www.ifra.com/IfraTrack/isd/4.1"
+		schemaLocation="IfraTrack-4.1-SharedDefinitions-AS.xsd" />
+
+	<xs:complexType name="associationType">
+		<xs:sequence>
+			<xs:element name="contactId" type="imf:object_uidType" />
+			<xs:element name="code" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="accountRoleType">
+		<xs:sequence>
+			<xs:element name="account" type="NameType" />
+			<xs:element name="value" type="NameType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="exclusiveAccountType">
+		<xs:sequence>
+			<xs:element name="account" type="NameType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="contactTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PERSON" />
+			<xs:enumeration value="LEGALPERSON" />
+			<xs:enumeration value="COMPANY" />
+			<xs:enumeration value="OFFICE" />
+			<xs:enumeration value="ACCOUNT" />
+			<xs:enumeration value="USER" />
+			<xs:enumeration value="AGENCY" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Predefinition of NameType -->
+	<xs:simpleType name="NameType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="50" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Predefinition of string80Type -->
+	<xs:simpleType name="string80Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="80" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Predefinition of string256Type -->
+	<xs:simpleType name="string256Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="256" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Predefinition of string1024Type -->
+	<xs:simpleType name="string1024Type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="1024" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="contactMetaDataType">
+		<xs:sequence>
+			<xs:element name="name" type="string80Type" />
+			<xs:element name="value" type="string256Type" />
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Define a postal address Type -->
+	<xs:complexType name="pAddressType">
+		<xs:complexContent>
+			<xs:extension base="isd:AbstractObject">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="title" type="NameType" />
+					<xs:element minOccurs="0" name="firstName" type="NameType" />
+					<xs:element minOccurs="0" name="name" type="NameType" />
+					<xs:element minOccurs="0" name="street" type="NameType" />
+					<xs:element minOccurs="0" name="streetNo" type="NameType" />
+					<xs:element minOccurs="0" name="zipCode" type="NameType" />
+					<xs:element minOccurs="0" name="city" type="NameType" />
+					<xs:element minOccurs="0" name="country" type="NameType" />
+					<xs:element minOccurs="0" name="department" type="NameType" />
+					<xs:element minOccurs="0" name="addOnText1" type="string1024Type" />
+					<xs:element minOccurs="0" name="addOnText2" type="string1024Type" />
+					<xs:element minOccurs="1" maxOccurs="unbounded" name="accountRole"
+						type="accountRoleType" />
+				</xs:sequence>
+			</xs:extension>
+                	
+            </xs:complexContent></xs:complexType>
+	<!-- Define a electronic address Type -->
+	<xs:complexType name="eAddressType">
+		<xs:annotation>
+			<xs:documentation>Postal address type</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="isd:AbstractObject">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="eMail" type="string80Type" />
+					<xs:element minOccurs="0" name="fax" type="NameType" />
+					<xs:element minOccurs="0" name="phone" type="NameType" />
+					<xs:element minOccurs="0" name="cellPhone" type="NameType" />
+					<xs:element minOccurs="0" name="webPage" type="string80Type" />
+					<xs:element minOccurs="1" maxOccurs="unbounded" name="accountRole"
+						type="accountRoleType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Extented definition of the ObjectType -->
+	<xs:complexType name="contactType">
+		<xs:complexContent mixed="false">
+			<xs:extension base="isd:AbstractObject">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="code" type="xs:string" />
+					<xs:element name="type" type="contactTypeType" />
+					<xs:element minOccurs="0" name="title" type="NameType" />
+					<xs:element minOccurs="0" name="firstName" type="NameType" />
+					<xs:element name="name" type="NameType" />
+					<xs:element minOccurs="0" name="notes" type="NameType" />
+					<xs:element minOccurs="0" name="superior" type="imf:object_uidType" />
+					<xs:element minOccurs="1" maxOccurs="unbounded" name="pAddress"
+						type="pAddressType" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="eAddress"
+						type="eAddressType" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="association"
+						type="associationType" />
+					<xs:element minOccurs="1" maxOccurs="unbounded" name="accountRole"
+						type="accountRoleType" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="MetaData"
+						type="contactMetaDataType" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="exclusiveAccount"
+						type="exclusiveAccountType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- extension of object object_class -->
+	<xs:element name="contact" substitutionGroup="imf:abstract_object"
+		type="imf:AbstractObjectType" />
+</xs:schema>
